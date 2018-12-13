@@ -1,0 +1,388 @@
+var itemSizeTableArr = new Array("men_app","women_app","kids_app","ftw","socks");
+
+$(document).ready(function() {
+					
+		// shoppingcartList_info_pdp.jsp选择颜色切换商品信息
+		// 选择颜色
+		$('.conboxnei .quickview-row  .pdp-main .usa li').live("click",function() {
+					var skuCode = $(this).attr("skuCode");
+				
+					var url = loxia.encodeUrl(_contextPath + '/shopping/cart/loadItemData.json');
+					var result = loxia.syncXhr(url, {
+						"skuCode" : skuCode,
+						"skuId" : '',
+						"skuCount" : ''
+					});
+					$(".conbox_lef.float-none").html(result);
+				
+					//实现图片轮播初始化加载
+					var mySwiper2 = new Swiper('.goods_carousel .swiper-container',{
+							centeredSlides : false,
+							slidesPerView : 'auto',
+							nextButton : '.goods_carousel .btn-arrow-s-red-right',
+							prevButton : '.goods_carousel .btn-arrow-s-red-left',
+					});
+					
+					
+					//-----------------------------
+					//初始化图片
+					$('.goods_carousel').off('click').on('click', '.swiper-slide',function(e) {
+						e.preventDefault();
+						$(this).addClass('bor').siblings().removeClass('bor');
+						var small = $('img', this).attr('src'), 
+						middle = small.replace(/\_80X80\./, '_540X540.'), 
+						big = small.replace(/\_80X80\./, '_2000X2000.');
+						/*
+						* middle = small.replace(/\-s\./, '.'), 
+						* big = small.replace(/\-s\./, '-max.');
+						*/
+						$(".goods_img_box .imgbox img").attr('src', middle);
+						$(".goods_img_box .imgbox img").attr("data-cloudzoom", "zoomImage: '" + big + "'");
+					});
+					//-----------------------------
+						
+						
+			});
+					
+			// PDP.jsp选择颜色切换商品信息
+			// 选择颜色
+			$('.boxjuzhong .usa li').live("click",function() {
+					//$(this).addClass('usa_bor').siblings().removeClass('usa_bor');
+					var skuCode = $(this).attr("skuCode");
+				
+					var url = loxia.encodeUrl(_contextPath + '/item/findItemDetail.json');
+					var result = loxia.syncXhr(url, {
+						"skuCode" : skuCode
+					});
+					$(".conbox_lef").html(result);
+					window.history.pushState( null, null, ("/"+skuCode+"/item"));
+					
+					////-----------------------------
+					if($("#pdp .conbox_lef").length > 0){
+							//全屏效果 
+							function launchFullScreen(element) {
+								if (element.requestFullscreen) {
+									element.requestFullscreen();
+								} else if (element.mozRequestFullScreen) {
+									element.mozRequestFullScreen();
+								} else if (element.webkitRequestFullscreen) {
+									element.webkitRequestFullscreen();
+								} else if (element.msRequestFullscreen) {
+									element.msRequestFullscreen();
+								}
+							}
+							//退出全屏
+							function exitFullscreen() {
+								if (document.exitFullscreen) {
+									document.exitFullscreen();
+								} else if (document.msExitFullscreen) {
+									document.msExitFullscreen();
+								} else if (document.mozCancelFullScreen) {
+									document.mozCancelFullScreen();
+								} else if (document.webkitExitFullscreen) {
+									document.webkitExitFullscreen();
+								}
+							}
+							
+							function loadImg(src, fn) {
+								$('<img src="' + src + '" />').load(function() {
+									var o = new Image();
+									o.src = src;
+									var ow = o.width;
+									oh = o.height;
+									fn(ow, oh);
+								});
+							}
+							var $win = $(window),
+							$goodsImg = $('#goods_img'),
+							$imgbox = $('.imgbox', $goodsImg),
+							$pdpProImg = $('.primary-product-image', $goodsImg),
+							imgSrc = $pdpProImg.attr('src'),
+							isFullScreen = false,
+							_cloudZoom = function() {
+								$pdpProImg.CloudZoom({
+									animationTime: 0,
+									easeTime: 0,
+									zoomWidth: getSizeByCloudZoom().w,
+									zoomHeight: getSizeByCloudZoom().h,
+									zoomOffsetX: 27
+								});
+							};
+							
+							_cloudZoom();
+							if (document.addEventListener) {
+								document.addEventListener('fullscreenchange', function() {
+									isFullScreen = document.fullscreen;
+									fullScreenSetCss(isFullScreen);
+								}, false);
+								document.addEventListener('webkitfullscreenchange', function() {
+									isFullScreen = document.webkitIsFullScreen;
+									fullScreenSetCss(isFullScreen);
+								}, false);
+								document.addEventListener('mozfullscreenchange', function() {
+									isFullScreen = document.mozFullScreen;
+									fullScreenSetCss(isFullScreen);
+								}, false);
+								document.addEventListener("MSFullscreenChange", function() {
+									isFullScreen = document.msFullscreenElement;
+									fullScreenSetCss(isFullScreen);
+								}, false);
+							}
+							
+							function fullScreenSetCss(full) {
+								$('.cloudzoom-blank, .cloudzoom-zoom').remove();
+								if (full) {
+									//$imgbox.addClass('fullScreenEvent');
+									$pdpProImg.data('CloudZoom').destroy();
+								} else {
+									$imgbox.css({
+										height: '',
+										width: ''
+									}).removeClass('fullScreenEvent');
+									$('.primary-product-image_max', $imgbox).hide();
+									_cloudZoom();
+								}
+							}
+							
+							function fullResize(ow, oh) {
+								var wH = $win.height(),
+								H = $('.goods_carousel', $goodsImg).outerHeight(true) + $('.goods_img_box_icon', $goodsImg).outerHeight(true);
+								var nh = wH - H - 50,
+								nw = nh / oh * ow;
+								$imgbox.css({
+									height: nh,
+									width: nw
+								});
+							}
+							loadImg(imgSrc, function(ow, oh) {
+								$('.fangda', $goodsImg).live("click",function() {
+									if ($.browser.msie && $.browser.version <= 10) {
+										if ($imgbox.hasClass('fullScreenEvent')) {
+											fullScreenSetCss(false);
+											$goodsImg.css({
+												position: ''
+											});
+											$('body,html').css({
+												height: '',
+												overflow: ''
+											});
+										} else {
+											$pdpProImg.data('CloudZoom').destroy();
+											$imgbox.addClass('fullScreenEvent');
+											$goodsImg.css({
+												position: 'fixed'
+											});
+											$win.resize();
+											
+											$('body,html').css({
+												height: $win.height(),
+												overflow: 'hidden'
+											});
+										}
+									} else {
+										if (isFullScreen) {
+											exitFullscreen();
+										} else {
+											$imgbox.addClass('fullScreenEvent');
+											launchFullScreen($goodsImg[0]);
+											$win.resize();
+										}
+									}
+								});
+								$win.resize(function() {
+									if ($imgbox.hasClass('fullScreenEvent')) {
+										fullResize(ow, oh);
+									}
+								});
+							});
+							
+							$win.keyup(function(e) {
+								var key = e.keyCode || window.event.keyCode;
+								if (key == 27) {
+									if ($.browser.msie && $.browser.version <= 10 && $imgbox.hasClass('fullScreenEvent')) {
+										$('.fangda', $goodsImg).click();
+									}
+								}
+							});
+							
+							var $maxImg = $('.primary-product-image_max'),
+							maxImgSrc = $maxImg.attr('src'),
+							showMaxMove = function(e, ow, oh) {
+								var ratio = ow / $imgbox.width() - 1;
+								var imgboxX = $imgbox.offset().left,
+								imgboxY = $imgbox.offset().top;
+								var x = -(e.clientX - imgboxX) * ratio,
+								y = -(e.clientY - imgboxY) * ratio;
+								$maxImg.css({
+									width: ow,
+									height: oh,
+									left: x,
+									top: y
+								}).show();
+							};
+							loadImg(maxImgSrc, function(ow, oh) {
+								$('.fullScreenEvent', $goodsImg)
+								.live('mouseenter mousemove', function(e) {
+									showMaxMove(e, ow, oh);
+								}).live('mouseleave', function(e) {
+									$maxImg.hide();
+								});
+							});
+							////-----------------------------
+					}
+					
+			});
+				
+			//尺码点击尺码
+			$('.size .size-auli li').live("click",function(){
+					var oldskuId = $(".size .size-text .cur-szbk").attr("skuId");
+					var skuId = $(this).attr("skuId");
+					if(skuId == oldskuId){
+						//判断是否点中是同一个
+						return;
+					}
+					
+					$(this).addClass('cur-szbk').siblings().removeClass('cur-szbk');
+//					 自定义，添加数量li标签
+					if($("#prompt").children().text().indexOf('尺码') != -1 ){
+						$("#prompt").children().remove();//清除提示
+					}
+					var availableQty = $(this).attr("qty");
+					$("li.count").find(".btn b").text("1");//没换一个尺码，重置数量
+					$('.shuliang').children().remove();//首先清除 所有的li标签
+					availableQty = availableQty > 8 ? 8:availableQty;
+					for ( var i = 0; i < availableQty; i++) {
+						var li = "";
+						if (i == 0) {
+							li = "<li class = 'cur-bk'>" + (i + 1) + "</li>";
+							$('.shuliang').append(li);
+						} else {
+							li = "<li>" + (i + 1) + "</li>";
+							$('.shuliang').append(li);
+						}
+					}
+			});
+				
+				
+			//数量
+			$('.count .drop-down').live("click",function(){
+					if("尺码" == $(".size .btn b").text()){
+						return;
+					}
+					if($(".size .size-auli li.cur-szbk").attr("skuId")){
+						$('.shuliang').show();
+					}
+					$('.drop-down-enter').hide();
+					
+					mousedownelement('ul.shuliang');
+			});
+			
+			function mousedownelement(element){
+				$(window).off('mouseup').on('mouseup', function(e){
+					if ($(e.target).closest('.drop-down').length == 0){
+						$(element).hide();
+					}
+				});
+			}
+			//数量
+			$('.shuliang li').live("click",function(){
+				var v = $(this).text();
+				$('.count b').text(v);
+				$('.shuliang').hide();
+				$(this).addClass('cur-bk').siblings().removeClass('cur-bk');
+				$("#prompt").children().remove();//清除提示
+			});
+		    
+		    //分享到微信的URL
+		    var weixinurl  = window.location.href;
+		    //二维码的大小
+		    var qrobj = {
+		    		width : 120, //宽度 
+		    		height : 120, //高度 
+		    		text : weixinurl
+		    	};
+		    if ($.browser.msie && $.browser.version < 9) {
+		    	qrobj.render = "table"
+		    }
+		    //分享到微信
+		    $('#weixin').live("click",function() {
+				$("#weixin_popup_main").html("<i class='fa fa-caret-left'></i>");
+				$("#weixin_popup_main").qrcode(qrobj);
+				$('#weixin_popup_main').show();
+				return false;//阻止事件冒泡，不执行点击body触发的事件
+			});
+		    //关闭二维码的弹层
+		    $('body').live("click",function() {
+				$('#weixin_popup_main').hide();
+			});
+		    
+		    
+});
+
+
+$(document).ready(function() {
+	$('.chimabiao').live('click', function(){
+		//点击时清除滚动条默认样式
+		$("#event-size-container").mCustomScrollbar("destroy");
+		
+		/*var code = $(".goods_about .bianhao #skuCode").val();
+		var url = domain_image+"/resources/product/"+code+"/"+code+".jsp";
+		$.ajax({
+	        type: "get",
+	        url: url,
+	        dataType: "html",
+	        jsonp: "callback",
+	        success: function(json){
+	        	$("#szie_dialog_pdp>.email-container").html(json);
+	    		customSizeDialog.show();
+	        },
+	        error: function(){
+	        }
+	    });*/
+		
+		var window_h = $(window).height();
+		var skuId = $(".goods_about .bianhao #skuId").val();
+    	var json = {"skuId" : skuId};
+		var url = loxia.encodeUrl(_contextPath + "/item/findSizeTable.json");
+		var result = loxia.syncXhr(url, json);
+		
+		if ($.inArray(result, itemSizeTableArr) >= 0) {
+			if("men_app" == result){
+				$("#szie_dialog_pdp>.email-container").html(men_app);
+	    		customSizeDialog.show();
+			}else if("women_app" == result){
+				$("#szie_dialog_pdp>.email-container").html(women_app);
+				customSizeDialog.show();
+			}else if("kids_app" == result){
+				$("#szie_dialog_pdp>.email-container").html(kids_app);
+				customSizeDialog.show();
+			}else if("ftw" == result){
+				$("#szie_dialog_pdp>.email-container").html(ftw);
+				customSizeDialog.show();
+			}else if("socks" == result){
+				$("#szie_dialog_pdp>.email-container").html(socks);
+				customSizeDialog.show();
+			}
+			if (window_h < 810) {
+				$("#szie_dialog_pdp .size-content").addClass("item-size-table-scroll");
+				$("#szie_dialog_pdp").css("top","100px");
+			};
+		} else {
+			if (result) {
+				$("#new_szie_dialog_pdp>.size-con").html(result);
+				//加载滚动条样式
+				$("#event-size-container").mCustomScrollbar({
+					scrollButtons: {
+						enable: true
+					},
+					theme: "3d-thick",
+					
+				});
+				newCustomSizeDialog.show();				
+			} else {
+				return;
+			}
+			
+		}				
+	});
+});

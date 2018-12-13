@@ -1,0 +1,252 @@
+/**
+ *
+ * 共用代码，提供常用事件、方法等
+ * @ author 梁宏
+ * @ version 1.0
+ *
+ */
+
+var nav = navigator
+    , namespace = '.spice'
+    //判断设备，如安卓，ipad等
+    , isAndroid     = (/android/gi).test(nav.appVersion)
+    , isIphone      = (/iphone/gi).test(nav.appVersion)
+    , isIpad        = (/ipad/gi).test(nav.appVersion)
+    //检测该环境是否支持touch事件
+    , hasTouch      = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch
+    //常用事件
+    , mouseenter    = hasTouch ? 'touchend' + namespace     : 'mouseenter' + namespace
+    , mouseleave    = hasTouch ? 'touchend' + namespace     : 'mouseleave' + namespace
+    , mousedown     = hasTouch ? 'touchstart' + namespace   : 'mousedown' + namespace
+    , mouseup       = hasTouch ? 'touchend' + namespace     : 'mouseup' + namespace
+    , mousemove     = hasTouch ? 'touchmove' + namespace    : 'mousemove' + namespace
+    , click         = hasTouch ? 'touchend' + namespace     : 'click' + namespace;
+
+var spice = window.spice || {};
+
+/**
+ * 返回body下最大的zIndex值
+ */
+spice.getMaxZIndex = function(){
+    return Math.max.apply(null, $(document.body).children().map(function(){ return $(this).css('zIndex')>>>0; }).get());
+}
+
+/**
+ * 弹出层
+ */
+spice.dialog = function(options){
+    if ( !(this instanceof arguments.callee) ) return new spice.dialog(options);
+    var self    = this;
+    var opt     = self.opt = $.extend({},self.defaultOptions,options);
+    self.elem = self.createElem( self.opt.template );
+
+    self.btnSuccess = $((opt.btnSuccessClass || '.btn-success'), self.elem);
+    self.btnCancel = $((opt.btnCancelClass || '.btn-cancel'), self.elem);
+    self.btnClose = $((opt.btnCloseClass || '.dialog-close'), self.elem);
+    self.elemMask = spice.mask();
+
+    $.each(['submit'],function(i,type) {
+        $.isFunction(opt[type]) && self.elem.bind(type, opt[type])
+    });
+
+    //触发事件
+    self.activate();
+}
+spice.dialog.prototype = {
+    getTemplate: function(){
+        var self = this
+            , btn = self.opt.button
+            , type = self.opt.type
+            , title = self.opt.title
+            , content = self.opt.content;
+        return '<div class="dialog">\
+                    <div class="dialog-container text-center">'
+                        +(title ? ('<h4>' + title + '</h4>') : '')
+                        +(content ? ('<p>' + content + '</p>') : '')
+                        +'<div class="dialog-btn-wrap">\
+                            <a class="btn btn-success">' + (btn[0] || '确认') + '</a>'
+                                +
+                                    (type == 'confirm' ? '<a class="btn btn-cancel">' + (btn[1] || '取消') + '</a>' : '')
+                                +
+                        '</div>\
+                    </div>\
+                    <a class="icon icon-close dialog-close">&times;</a>\
+                </div>';
+    }
+    , defaultOptions: {
+        template             : ''
+        , type               : 'info'
+        , dialogClass        : 'spice-dialog'
+        , fixed              : false
+        , title              : ''
+        , content            : ''
+        , button             : ['确认', '取消']
+        , btnSuccessClass    : '.btn-success'
+        , btnCancelClass     : '.btn-cancel'
+        , btnCloseClass      : '.dialog-close'
+    }
+    , _trigger : function(type) {
+        this.elem.triggerHandler(type);
+    }
+    , activate: function(){
+        var self = this;
+        self.btnSuccess.bind(click, function(){
+            if(!$.isFunction(self.opt.submit)){
+                self.hide();
+                return false;
+            }
+            self._trigger('submit');
+        });
+        self.btnCancel.add(self.btnClose).bind(click, function(){
+            self.hide();
+        });
+        /*$(window).bind('resize.dialog',function() {
+            self.refreshPosition( self.elem );
+        });*/
+    }
+    , refreshPosition: function( spiceDialog ){
+        spiceDialog.removeAttr('style').hide();
+        var dW = spiceDialog.outerWidth(true)
+            , dH = spiceDialog.outerHeight(true)
+            , cssStyle = {
+                marginTop: -dH/2
+                , marginLeft: -dW/2
+                , left: '50%'
+                , top: '50%'
+                , position: 'fixed'
+            };
+        
+        if(!this.opt.fixed){
+            var wSt = $(window).scrollTop()
+                , wH = $(window).height();
+            cssStyle.position = 'absolute';
+            cssStyle.marginTop = '';
+            cssStyle.top = wSt + (wH - dH)/2;
+        }
+        spiceDialog.css( cssStyle );
+    }
+    , createElem: function( elem ){
+        var spiceDialog = $(elem || this.getTemplate()).addClass(this.opt.dialogClass).hide().appendTo('body');
+        this.refreshPosition(spiceDialog);
+        //spice.mask();
+        spiceDialog.css('zIndex', spice.getMaxZIndex() + 2);
+        return spiceDialog;
+    }
+    , refreshZIndex: function(){
+        this.elem.css('zIndex', spice.getMaxZIndex() + 1);
+        return this;
+    }
+    , show: function( callback ){
+        this.refreshPosition( this.elem );
+        this.elem.fadeTo(0, 1, callback);
+        //spice.mask().show();
+        this.elemMask.show();
+        this.elem.css('zIndex', spice.getMaxZIndex() + 2);
+        return this;
+        
+    }
+    , hide: function( callback ){
+        this.elem.fadeOut(0, callback);
+        //spice.mask().hide();
+        this.elemMask.hide();
+        return this;
+    }
+    , destroy: function(){
+        this.elem.remove();
+        //spice.mask().remove();
+        this.elemMask.remove();
+        return this;
+    }
+}
+
+/**
+ * 遮罩层
+ */
+spice.mask = function(options){
+    if ( !(this instanceof arguments.callee) ) return new spice.mask(options);
+    var self  = this;
+    self.opt = $.extend({}, self.defaultOptions, options);
+    self.elem = self.createElem();
+}
+spice.mask.prototype = {
+    defaultOptions: {
+        style: {
+            position            : 'fixed'
+            , width             : '100%'
+            , height            : '100%'
+            , top               : 0
+            , left              : 0
+            , display           : 'none'
+            , backgroundColor   : '#000000'
+            , zIndex            : 100
+            , opacity            : 0
+        }
+    }
+    , createElem: function(){
+        var blackOpacity = $('.spice-black-opacity');
+        //if(blackOpacity.length == 0){
+            return $('<div>', { 'class' : 'spice-black-opacity' })
+                .css(this.opt.style)
+                .css('zIndex', spice.getMaxZIndex() + 2)
+                .appendTo('body');
+        /*}else{
+            return blackOpacity;
+        }*/
+    }
+    , show: function( callback ){
+        this.elem.fadeTo(500, 0.5, callback);
+        return this;
+    }
+    , hide: function( callback ){
+        this.elem.fadeOut(500, callback);
+        return this;
+    }
+    , setZIndex: function( zIndex ){
+        this.elem.css('zIndex', zIndex);
+        return this;
+    }
+    , refreshZIndex: function(){
+        this.elem.css('zIndex', spice.getMaxZIndex() - 1);
+        return this;
+    }
+    , remove: function(){
+        this.elem.remove();
+        return this;
+    }
+}
+
+/**
+ * 图片加载完成
+ */
+spice.loadImgSuccess = function(elem, options){
+    if ( !(this instanceof arguments.callee) ) return new spice.loadImgSuccess(options);
+    var self    = this;
+    var opt     = self.opt = $.extend({}, self.defaultOptions, options);
+}
+spice.loadImgSuccess.prototype = {
+    defaultOptions:{
+        
+    }
+}
+//下拉
+/*spice.dropdown = function(options){
+    if ( !(this instanceof arguments.callee) ) return new spice.dialog(options);
+    var self    = this;
+    var opt     = self.opt = $.extend({}, self.defaultOptions, options);
+}
+spice.dropdown.prototype = {
+    defaultOptions:{
+
+    }
+}*/
+
+/*spice.dialog = function(options){
+    if ( !(this instanceof arguments.callee) ) return new spice.dialog(options);
+    var self    = this;
+    var opt     = self.opt = $.extend({},self.defaultOptions,options);
+}
+spice.dialog.prototype = {
+    defaultOptions:{
+
+    }
+}*/

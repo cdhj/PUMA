@@ -1,0 +1,21 @@
+$fontsize : 12px;
+
+.goodslist{
+	width: 100%;
+}
+.goodsDiv{
+	width: 1080px;
+	margin:0 auto;
+	/*background: red;*/
+}
+
+.smallTitle{
+	color:#393938;
+	a{
+		color:#393938;
+		font-size: $fontsize;
+	}
+	span:last-child a{
+		color:red;
+	}
+}

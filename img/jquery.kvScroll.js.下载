@@ -1,0 +1,303 @@
+/**
+ *	轮播效果
+ * @author 梁宏
+ * @version 1.0
+ *
+ */
+(function($){
+	$.fn.kvScroll = function (options) {
+		// Browser capabilities
+		var isAndroid = (/android/gi).test(navigator.appVersion)
+			, isIDevice = (/iphone|ipad/gi).test(navigator.appVersion)
+			, isPlaybook = (/playbook/gi).test(navigator.appVersion)
+			, isTouchPad = (/hp-tablet/gi).test(navigator.appVersion)
+			, hasTouch = 'ontouchstart' in window && !isTouchPad
+			, START_EV = hasTouch ? 'touchstart.kvScroll' : 'mousedown.kvScroll'
+			, MOVE_EV = hasTouch ? 'touchmove.kvScroll' : 'mousemove.kvScroll'
+			, END_EV = hasTouch ? 'touchend.kvScroll' : 'mouseleave.kvScroll'
+			, UP_EV = hasTouch ? 'touchend.kvScroll' : 'mouseup.kvScroll';
+
+		return this.each(function (index, self) {
+
+			var $self = $(self), $ul = $('ul:eq(0)', $self);
+			//init
+			$ul.find('.kvScroll-Clone').remove();
+
+	        var $li = $('>li', $ul)
+	        	, liLength = $li.length
+	        	, interval = $self.data('interval')
+	        	, maxPage = liLength - 1
+	        	, curPage = 0
+	        	, initMl = 0
+	        	, H = getLiH()
+	        	, W = getLiW()
+	        	, galleryMaxMl;
+
+	        var config = $.extend({
+	        				types		: 'scroll'			//效果的类型
+				            , left		: '.left'			//左边按钮
+				            , right		: '.right'			//右边按钮
+				            , dots		: '.scroll-dots'	//焦点图
+				            , easing	: 'normal'			//动画时间控制，'slow' or 'normal' or 'fast' or number
+				            , autoPlay	: true				//是否自动轮播
+				            , time		: 3000				//自动轮播时间
+				            , loop		: true				//是否无限循环滚动
+				            , moveNum	: 1 				//滚动个数
+				            , stopElem	: null				//该选择器元素如果显示则取消touch滚动
+				            , callBack	: null				//回调函数
+				        }, (options||{}) );
+
+	        if(liLength <= 1) return false;
+
+	        var moveNum = config.moveNum;
+	        if(config.types == 'scroll-loop' && config.loop){
+	        	var $cloneLiFirst = $li.first().clone(true).addClass('kvScroll-Clone'), $cloneLiLast = $li.last().clone(true).addClass('kvScroll-Clone');
+		        $ul.append($cloneLiFirst).prepend($cloneLiLast);
+		        liLength = liLength + 2;
+		        initMl = '-100%';
+		        maxPage = liLength - 1;
+		        curPage = 1;
+	        }
+	        if(config.types == 'fade'){
+	        	$(window).resize(function(){
+		        	$ul.css({height: 'auto'});
+		        	$li.css({height: 'auto'});
+		        	H = getLiH();
+		        	$ul.css({height: H});
+		        	$li.css({height: H});
+		        }).resize();
+		        $li.css({width: '100%', position: 'absolute', left: 0}).hide();
+		        $li.eq(0).show();		        
+	        }else if(config.types == 'gallery'){
+	        	var liW = getLiW(), divW = getDivW();
+	        	if(liW == divW){
+	        		divW = getDivH();
+	        		liW = getLiH();
+		        }
+	        	$(window).resize(function(){
+	        		$ul.css({marginLeft: 0, marginTop: 0});
+	        		divW = +getDivW();
+	        		if(liW == divW){
+	        			divW = getDivH();
+	        		}
+	        		var showNum = parseInt(divW/liW);
+	        		moveNum = showNum < config.moveNum ? showNum : config.moveNum;
+	        		maxPage	= Math.ceil((liLength - showNum)/moveNum);
+					galleryMaxMl = -liW*liLength + divW;
+					curPage = 0;
+	        	}).resize();
+
+	        }else{
+		        $ul.css({width: 100*(liLength) + '%', marginLeft: initMl});
+		        $('>li', $ul).css({width: 100/(liLength) + '%'}).css({display: 'block'});
+	        }
+
+	        var $dots 		= $(config.dots, $self)
+	       		, $dotsA 	= $(' > a', $dots)
+	       		, $left 	= $(config.left, $self)
+	       		, $right 	= $(config.right, $self)
+	       		, isNotAnimate = function(){
+	       			return $ul.is(':not(:animated)') && $li.is(':not(:animated)');
+	       		}
+	       		, initDots = function( index ){
+	       			$dotsA.eq(index).addClass('active').siblings().removeClass('active');
+	       		}
+	       		, scroller = function ( index ) {
+		       		$ul.animate({marginLeft: '-' + index*100 + '%'}, config.easing, function(){
+		       			if(config.types == 'scroll-loop' && config.loop){
+		       				if(index == 0){
+		       					$ul.css({marginLeft: '-' + ( liLength - 2 )*100 + '%'});
+		       					curPage = liLength - 2;
+		       				}else if(index == maxPage){
+		       					$ul.css({marginLeft: initMl});
+		       					curPage = 1;
+		       				}else{
+		       					curPage = index;
+		       				}
+		       			}
+		       			initDots(curPage - (config.types == 'scroll-loop' && config.loop ? 1 : 0));
+		       			config.callBack && $.isFunction(config.callBack) && config.callBack(curPage);
+		       		});
+	       		}
+	       		, scrollFade = function( index ){
+	       			$li.eq(index).fadeIn(config.easing, function(){
+	       				curPage = index;
+	       				initDots(curPage);
+   						config.callBack && $.isFunction(config.callBack) && config.callBack(curPage);
+ 					});
+	       			$li.not(':eq('+index+')').fadeOut(config.easing);
+	       		}
+	       		, scrollGallery = function( index ){
+	       			var _ulMl = -index*getLiW()*moveNum;
+	       			_ulMl = _ulMl < galleryMaxMl ? galleryMaxMl : _ulMl;
+	       			if(getLiW() == getDivW()){
+	       				$ul.animate({marginTop: _ulMl}, config.easing, function(){});	
+	       			}else{
+	       				$ul.animate({marginLeft: _ulMl}, config.easing, function(){});	
+	       			}
+	       		}
+	       		, initInterval = function(){
+	       			$self.data('interval') && clearInterval($self.data('interval'));
+	       		}
+	       		, isStopElem = function(){
+	       			if(hasTouch && config.stopElem){
+	       				//return $(config.stopElem, $li.eq( (config.types == 'scroll-loop' ? curPage-1 : curPage) )).is(':not(:visible)');
+	       				return $(config.stopElem + ':visible', $li).length == 0;
+	       			}
+	       			return true;
+	       		};
+
+	       	var dotW = ( config.types == 'scroll-loop' && config.loop ? liLength - 2 : liLength )*$dotsA.outerWidth(true)
+	        $dots.css({width: dotW, left: '50%', marginLeft: -dotW/2});
+
+	       	if($left.length == 0){
+	       		$self.append('<a class="kvScroll-left none"></a>');
+	       		$left = $('.kvScroll-left', $self);
+	       	}
+	       	if($right.length == 0){
+	       		$self.append('<a class="kvScroll-right none"></a>');
+	       		$right = $('.kvScroll-right', $self);
+	       	}
+	       	initDots(0);
+	       	$right.unbind('.kvScroll').bind(UP_EV, function(){	       		
+	       		if(isNotAnimate()){
+	       			++curPage;
+		       		if(curPage > maxPage) {
+		       			curPage = config.loop ? 0 : maxPage;
+		       		}
+		       		if(config.types == 'scroll' || config.types == 'scroll-loop'){
+		       			scroller(curPage);
+		       		}else if(config.types == 'fade'){
+		       			scrollFade(curPage);
+		       		}else if(config.types == 'gallery'){
+						scrollGallery(curPage);
+			        }					
+	       		}			       		
+	       	});
+
+	       	$left.unbind('.kvScroll').bind(UP_EV, function(){
+	       		if(isNotAnimate()){
+		       		--curPage;
+		       		if(curPage < 0) {
+		       			curPage = config.loop ? maxPage : 0;
+		       		}
+		       		if(config.types == 'scroll' || config.types == 'scroll-loop'){
+		       			scroller(curPage);
+		       		}else if(config.types == 'fade'){
+		       			scrollFade(curPage);
+		       		}else if(config.types == 'gallery'){
+						scrollGallery(curPage);
+			        }
+	       		}
+	       	});
+
+	       	$dotsA.unbind('.kvScroll').bind(UP_EV, function(){
+	       		if(isNotAnimate()){
+		       		curPage = $(this).index();
+		       		if(config.types == 'scroll' || config.types == 'scroll-loop'){
+		       			scroller((config.types == 'scroll-loop' ? curPage + 1 : curPage ));
+		       		}else if(config.types == 'fade'){
+		       			scrollFade(curPage);
+		       		}
+		       	}
+	       	});
+
+	       	//auto play
+       		function addInterval (){
+       			initInterval();
+       			interval = setInterval(function(){
+					config.autoPlay && $right.trigger(UP_EV);
+				}, config.time);
+				$self.data('interval', interval);
+       		}
+       		function removeInterval (){
+       			interval && clearInterval(interval);
+       		}
+       		addInterval();
+
+       		function getRecord (e){
+				var touches = e;
+				if(hasTouch){
+					touches = e.originalEvent.changedTouches;//targetTouches;
+				}
+				return touches;
+			}
+			function getUlMl (){
+				return +$ul.css('marginLeft').replace(/px/ig, '');
+			}
+			function getLiW (){
+				return +$li.outerWidth(true);
+			}
+			function getLiH (){
+				return +$li.outerHeight(true);
+			}
+			function getDivW (){
+				return +$('>div', $self).width();
+			}
+			function getDivH (){
+				return +$('>div', $self).height();
+			}
+			var sx, mx, cltE, sMl, $scrollHover = $self;
+			if(hasTouch){
+				$scrollHover = $self.find('ul:eq(0)');
+			}
+       		$scrollHover
+       		.unbind('.kvScroll')
+   			.bind(START_EV, function(e){
+   				removeInterval();
+   				//if(hasTouch && config.types != 'gallery' && isStopElem()){
+   					cltE = getRecord(e);
+       				sMl = getUlMl();
+       				sx = (cltE.clientX ? cltE.clientX : cltE[0].pageX) - sMl;
+       				mx = null;
+   				//}
+   			})
+   			.bind(MOVE_EV, function(e){
+   				removeInterval();
+   				if(hasTouch && config.types != 'gallery' && isStopElem()){
+       				var el = getRecord(e);//cltE;
+       				mx = el.clientX ? el.clientX : el[0].pageX;
+       				if(config.types != 'fade'){
+       					var l = mx - sx;
+       					if(config.types == 'scroll' || (config.types == 'scroll-loop' && !config.loop)){
+       						if(l > 0){
+	       						$ul.css({marginLeft: Math.abs(l)/3});
+	       					}else if(l < -maxPage*$li.width()){
+	       						$ul.css({marginLeft: (mx - sx - sMl)/3 + sMl});
+	       					}else{
+	       						$ul.css({marginLeft: l});
+	       					}
+       					}else{
+       						$ul.css({marginLeft: l});
+       					}
+       				}
+       			}
+   			})
+   			.bind(END_EV, function(e){
+   				addInterval();
+   				if(hasTouch && config.types != 'gallery' && isStopElem()){
+       				if(config.types == 'scroll' || config.types == 'scroll-loop'){
+       					var ulMl = getUlMl(), liW = getLiW();
+       					if(Math.abs(sMl - ulMl) > 25){
+       						curPage = Math.ceil(Math.abs(ulMl/liW)) - (sMl > ulMl ? 0 : 1);
+	       					curPage = curPage > maxPage ? maxPage : curPage;
+       					}
+		       			mx && scroller(curPage);
+		       		}else if(config.types == 'fade'){
+		       			if(Math.abs(sx - mx) > 25){
+		       				curPage = sx > mx ? curPage + 1 : curPage - 1;
+		       			}
+		       			if(curPage < 0) {
+			       			curPage = config.loop ? maxPage : 0;
+			       		}
+			       		if(curPage > maxPage) {
+			       			curPage = config.loop ? 0 : maxPage;
+			       		}
+		       			scrollFade(curPage);
+		       		}
+   				}
+   			});
+
+		});
+	}
+})(jQuery);

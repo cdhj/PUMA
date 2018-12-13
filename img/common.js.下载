@@ -1,0 +1,529 @@
+//var commonTokenUrl = '/common/token';
+//var isShowDeciaml = true;
+//
+//function showPrice(price) {
+//	if (isShowDeciaml) {
+//		var result = price.toFixed(decimalCount);
+//		return result;
+//	}
+//
+//	return price;
+//}
+
+function getCookie(Name) {
+	var search = Name + "=";
+	if (document.cookie.length > 0) {
+		offset = document.cookie.indexOf(search);
+		if (offset != -1) {
+			offset += search.length;
+			end = document.cookie.indexOf(";", offset);
+			if (end == -1)
+				end = document.cookie.length;
+			return removeCookiequotes(unescape(document.cookie.substring(offset, end)));
+		} else
+			return "";
+	}
+}
+
+// 有时候测试环境会在cookie的值加上引号,此方法是删除多余的引号
+function removeCookiequotes(value) {
+	return value.replace(/\"/g, "");
+}
+// 为了删除指定名称的cookie，可以将其过期时间设定为一个过去的时间
+function delCookie(name) {
+	var date = new Date();
+	date.setTime(date.getTime() - 10000);
+	document.cookie = name + "=a; expires=" + date.toGMTString();
+}
+
+/**
+ * 设置cookie
+ * 
+ * @param c_name
+ *            key
+ * @param value
+ *            value
+ * @param expiredays
+ *            过期天数
+ */
+function setCookie(c_name, value, expiredays) {
+	var exdate = new Date();
+	exdate.setDate(exdate.getDate() + expiredays);
+	document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+}
+
+/**
+ * 跳转url
+ * 
+ * @param url
+ */
+function forwardUrl(url) {
+	window.location.href = makeRealVersionUrl(url);
+}
+
+function refresh() {
+	window.location.reload(true);
+}
+
+/**
+ * 给url地址加上一个实时的版本号
+ * 
+ * @param url
+ * @returns {String}
+ */
+function makeRealVersionUrl(url) {
+	var iTime = (new Date()).getTime();
+	url += (/\?/.test(url)) ? "&" : "?";
+
+	return (url + "rv=" + iTime.toString());
+}
+
+/**
+ * 判断字符是不是空
+ * 
+ * @param str
+ */
+function isNotNullOrEmpty(str) {
+	if (str != undefined && str != null && str != "" && str != "undefined") {
+		return true;
+	} else {
+		return false;
+	}
+}
+/*
+ * Submit a form with arguments arguments: mode: sync/async sync means page will
+ * be jump to a new page(default) lock: true/false, default is true success:
+ * function, async calls after success error: function, async calls if error
+ */
+function submitForm(form, args) {
+	var f = _getForm(form), mode = args.mode || "sync";
+
+	var c = true;
+	// validateType未填写,或是为1
+
+	c = validateForm(f);
+
+	if (c) {
+		if (mode == "sync") {
+			var action = $(f).attr("action");
+			$(f).attr("action", makeRealVersionUrl(action));
+
+			f.submit();
+		} else {
+			asyncXhr($(f).attr("action"), f, {
+				type : $(f).attr("method") || "POST",
+				successHandler : args.successHandler
+			});
+		}
+	} else {
+		// alert("验证不合法");
+	}
+}
+
+function hitch(scope, method) {
+	if (!method) {
+		method = scope;
+		scope = null;
+	}
+	if (this.isString(method)) {
+		scope = scope || _g;
+		if (!scope[method]) {
+			throw ([ 'hitch: scope["', method, '"] is null (scope="', scope, '")' ].join(''));
+		}
+		return function() {
+			return scope[method].apply(scope, arguments || []);
+		}; // Function
+	}
+	return !scope ? method : function() {
+		return method.apply(scope, arguments || []);
+	};
+}
+
+/*
+ * ajax call url ajax call url data data object or form id args other options
+ */
+
+//function asyncXhr(url, data, args) {
+//
+//	if (!args.success) {
+//
+//		args = $.extend({}, args, {
+//			success : function(data, textStatus) {
+//				if (data.exception) {
+//					// with exception
+//					if (data.exception.statusCode == 1) {
+//						sAlert("系统错误,请联系客服人员");
+//					} else {
+//						sAlert("温馨提示",data.exception.message);
+//					}
+//					reloadToken();
+//				} else {
+//					if (args.successHandler)
+//						hitch(args, "successHandler")(data, textStatus);
+//					else {
+//						sAlert("温馨提示",$(f).attr("name"));
+//					}
+//				}
+//
+//			}
+//		});
+//	}
+//
+//	if (!args.error) {
+//		args = $.extend({}, args, {
+//			error : function(XMLHttpRequest, textStatus, errorThrown) {
+//
+//				if (XMLHttpRequest.status == 502) {
+////					alert("未登录");
+//					sAlert("未登录");
+//				} else if (XMLHttpRequest.status == 603) {
+////					alert("服务器忙");
+//					sAlert("服务器忙");
+//				} else if (XMLHttpRequest.status == 604) {
+////					alert("重复提交，请刷新页面后再进行修改");
+//					sAlert("重复提交，请刷新页面后再进行修改");
+//				} else {
+//					/*
+//					 * $(this).sAlert({ type : "open", title : '温馨提示！', content
+//					 * :textStatus });
+//					 */
+//				}
+//
+//				if (args.errorHandler)
+//					hitch(args, "errorHandler")(textStatus, XMLHttpRequest);
+//			}
+//		});
+//	}
+//
+//	$.ajax(this._ajaxOptions(url, data, args));
+//}
+//
+//function asyncXhrGet(url, data, args) {
+//	args = $.extend({}, args, {
+//		"type" : "GET"
+//	});
+//	asyncXhr(url, data, args);
+//}
+//
+//function asyncXhrPost(url, data, args) {
+//	args = $.extend({}, args, {
+//		"type" : "POST"
+//	});
+//	asyncXhr(url, data, args);
+//}
+//
+///* ajax sync call */
+//function syncXhr(url, data, args) {
+//	var _data, options = this._ajaxOptions(url, data, args);
+//	$.extend(options, {
+//		async : false,
+//		success : function(data, textStatus) {
+//			_data = data;
+//		},
+//		error : args.error ? args.error : function(XMLHttpRequest, textStatus, errorThrown) {
+//			_data = {};
+//			var exception = {};
+//			exception["message"] = "Error occurs when fetching data from url:" + this.url;
+//			exception["cause"] = textStatus ? textStatus : errorThrown;
+//			_data["exception"] = exception;
+//			if (XMLHttpRequest.status == 502) {
+//				// $(this).sAlert({
+//				// type : "open",
+//				// title : '温馨提示！',
+//				// content :"请登录"
+//				// });
+//				// 						 
+//				// clearLoginInfo();
+////				alert("您未登录，是否要进入登录界面？");
+//				sAlert("您未登录，是否要进入登录界面？");
+//			} else if (XMLHttpRequest.status == 604) {
+////				alert("重复提交，请刷新页面后再进行修改");
+//				sAlert("重复提交，请刷新页面后再进行修改");
+//			}
+//		}
+//	});
+//	$.ajax(options);
+//	// console.dir(_data);
+//	return _data;
+//}
+
+//function syncXhrGet(url, data, args) {
+//	args = $.extend({}, args, {
+//		"type" : "GET"
+//	});
+//	return syncXhr(url, data, args);
+//}
+
+//function syncXhrPost(url, data, args) {
+//	args = $.extend({}, args, {
+//		"type" : "POST"
+//	});
+//	return syncXhr(url, data, args);
+//}
+
+///* compose ajax call options */
+//function _ajaxOptions(url, data, args) {
+//	if (!args.cache)
+//		url = makeRealVersionUrl(url);
+//
+//	url += ((/\?/.test(url)) ? "&" : "?") + "_t=" + commonToken;
+//	var options = {};
+//	if (arguments.length === 1)
+//		options = url;
+//	else {
+//		options = args || {};
+//		options["url"] = url;
+//		if (data) {
+//
+//			if (isString(data) || $(data).is("form")) {
+//				// data is a form
+//				var dataJson = this._ajaxFormToObj(data);
+//
+//				$.extend(options, {
+//					data : dataJson
+//				});
+//			} else {
+//
+//				$.extend(options, {
+//					data : data
+//				});
+//			}
+//
+//		}
+//	}
+//	// console.dir(options);
+//	return options;
+//}
+
+//function reloadToken() {
+//
+//	if (commonToken != "") {
+//		var d = syncXhrGet(commonTokenUrl);
+//		commonToken = d;
+//	}
+//}
+
+function isString(obj) {
+	return typeof obj === "string" || obj instanceof String;
+}
+
+///* used in building ajax data object from one form */
+//function _ajaxFormToObj(form) {
+//	form = _getForm(form);
+//	if (!form)
+//		return {};
+//	var ret = {}, exclude = "file|submit|image|reset|button|";
+//	$.each(form.elements, function(i, e) {
+//		var name = e.name, type = (e.type || "").toLowerCase();
+//		if (name && type && exclude.indexOf(type) === -1 && !e.disabled) {
+//			_ajaxSetValue(ret, name, _ajaxFieldValue(e));
+//		}
+//	});
+//	return ret;
+//}
+
+//function _getForm(form) {
+//	var f = form;
+//	if (this.isString(form)) {
+//		f = $("#" + form);
+//		if (f.length == 0)
+//			f = $("form[name='" + form + "']");
+//	}
+//	return (f instanceof jQuery) ? f.get(0) : f;
+//}
+//
+//function _ajaxSetValue(obj, name, value) {
+//	if (value === null)
+//		return;
+//	var val = obj[name];
+//	if (isString(val)) {
+//		obj[name] = [ val, value ];
+//	} else if ($.isArray(val)) {
+//		obj[name].push(value);
+//	} else {
+//		obj[name] = value;
+//	}
+//}
+///* used in building ajax data object from one form */
+//function _ajaxFieldValue(domNode) {
+//	var ret = null, type = (domNode.type || "").toLowerCase();
+//	if (domNode.name && type && !domNode.disabled) {
+//		if (type === "radio" || type === "checkbox") {
+//			if (domNode.checked) {
+//				ret = domNode.value
+//			}
+//		} else if (domNode.multiple) {
+//			ret = [];
+//			$("option", domNode).each(function() {
+//				if (this.selected)
+//					ret.push(this.value);
+//			});
+//		} else {
+//			ret = domNode.value;
+//		}
+//	}
+//	return ret;
+//}
+
+/**
+ * 日期格式化 :new Date().format("yyyy-MM-dd hh:mm:ss");
+ * 
+ * @param format
+ * @returns
+ */
+Date.prototype.format = function(format) {
+	var o = {
+		"M+" : this.getMonth() + 1, // month
+		"d+" : this.getDate(), // day
+		"h+" : this.getHours(), // hour
+		"m+" : this.getMinutes(), // minute
+		"s+" : this.getSeconds(), // second
+		"q+" : Math.floor((this.getMonth() + 3) / 3), // quarter
+		"S" : this.getMilliseconds()
+	// millisecond
+	};
+
+	if (/(y+)/.test(format)) {
+		format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	}
+
+	for ( var k in o) {
+		if (new RegExp("(" + k + ")").test(format)) {
+			format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+		}
+	}
+	return format;
+};
+
+/**
+ * 
+ * Base64 encode / decode
+ * 
+ * @author haitao.tu
+ * @date 2010-04-26
+ * @email <a href="mailto:tuhaitao@foxmail.com">tuhaitao@foxmail.com</a>
+ * 
+ */
+
+function Base64() {
+
+
+	// private property
+	_keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+	// public method for encoding
+	this.encode = function(input) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+		input = _utf8_encode(input);
+		while (i < input.length) {
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+			output = output + _keyStr.charAt(enc1) + _keyStr.charAt(enc2) + _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+		}
+		return output;
+	};
+
+	// public method for decoding
+	this.decode = function(input) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+		while (i < input.length) {
+			enc1 = _keyStr.indexOf(input.charAt(i++));
+			enc2 = _keyStr.indexOf(input.charAt(i++));
+			enc3 = _keyStr.indexOf(input.charAt(i++));
+			enc4 = _keyStr.indexOf(input.charAt(i++));
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+			output = output + String.fromCharCode(chr1);
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+		}
+		output = _utf8_decode(output);
+		return output;
+	};
+
+	// private method for UTF-8 encoding
+	_utf8_encode = function(string) {
+		string = string.replace(/\r\n/g, "\n");
+		var utftext = "";
+		for (var n = 0; n < string.length; n++) {
+			var c = string.charCodeAt(n);
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			} else if ((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			} else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+
+		}
+		return utftext;
+	};
+
+	// private method for UTF-8 decoding
+	_utf8_decode = function(utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+		while (i < utftext.length) {
+			c = utftext.charCodeAt(i);
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			} else if ((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i + 1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			} else {
+				c2 = utftext.charCodeAt(i + 1);
+				c3 = utftext.charCodeAt(i + 2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+		}
+		return string;
+	};
+
+}
+
+
+function dateCompare(startdate,enddate)   
+{   
+	var arr=startdate.split("-");    
+	var starttime=new Date(arr[0],arr[1],arr[2]);    
+	var starttimes=starttime.getTime();   
+	  
+	var arrs=enddate.split("-");    
+	var lktime=new Date(arrs[0],arrs[1],arrs[2]);    
+	var lktimes=lktime.getTime();   
+	  
+	if(starttimes>lktimes)    
+	{   
+		return true;   
+	} else {
+		return false;   
+	}
+} 

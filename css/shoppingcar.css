@@ -1,0 +1,199 @@
+.shpcar{
+	width: 100%;
+}
+.shpcarDiv{
+	width: 1100px;
+	margin:0 auto;
+	padding-bottom: 30px;
+}
+.headercar{
+	overflow: hidden;
+	margin-top:80px;
+	padding-bottom: 10px;
+	border-bottom:3px solid #333;
+}
+.headercar h1{
+	font-size: 36px;
+	float:left;
+	color:#333;
+}
+.leftheader{
+	float:right;
+	height: 40px;
+}
+.leftheader a{
+	color:#333;
+	font-size: 14px;
+	float: left;
+	line-height: 40px;
+	margin-right: 10px;
+}
+.leftheader .arrow1{
+	float:left;
+	margin-top:15px;
+	margin-right: 10px;
+}
+.leftheader .addcar{
+	float:left;
+	position:relative;
+	width: 180px;
+	height: 40px;
+	line-height:40px;
+	background: red;
+}
+.addcar>div{
+	font-size: 14px;
+	color:white;
+	padding-left: 50px; 
+}
+.arrow1 div{
+	width: 0;
+	height: 0;
+	border:5px solid transparent;
+	border-right-color:#333;
+}
+.arrow2 div{
+	width: 0;
+	height: 0;
+	border:3px solid transparent;
+	border-top-color:white;
+	border-right-color:white;
+	position: absolute;
+	top:2px;
+	right:2px;
+}
+.zongji{
+	width: 100%;
+	overflow: hidden;
+	border-bottom: 1px dashed #333;
+}
+.zongji p{
+	line-height: 70px;
+	float: right;
+	height: 70px;
+	color:#333;
+	font-size: 18px;
+	font-weight: 600;
+}
+.carmain{
+	overflow: hidden;
+	margin-top:20px;
+}
+.carleft{
+	width: 80%;
+	float: left;
+}
+.cartit span{
+	color:#999;
+	font-size: 14px;
+	margin-right: 77px;
+}
+input{
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+}
+.cartit span:first-of-type{
+	margin-right: 450px;
+}
+.cartit span:last-child{
+	margin-right: 0;
+}
+.goodscar{
+	margin-top: 20px;
+	height: 170px;
+	border-bottom: 1px solid #ccc;
+}
+.goodscar img{
+	vertical-align: middle;
+}
+.info{
+	vertical-align: middle;
+	display: inline-block;
+	padding-top: 20px;
+}
+.goodscar .c1{
+	float:left;
+	margin-right: 60px;
+	line-height: 140px;
+}
+.goodscar .c1:first-child{
+	margin-right: 220px;
+	line-height: 25px;
+}
+.goodscar .c1:nth-child(2){
+	margin-right: 83px;
+}
+.goodscar .c1:last-child{
+	margin-right: 0;
+}
+.c1 p{
+	font-size: 12px;
+}
+.info a{
+	font-size: 12px;
+	color:#333;
+	text-decoration: underline;
+	margin-right:10px;
+}
+.info p:nth-child(1){
+	font-size: 14px;
+	color:#333;
+}
+.info p{
+	color:#999;
+}
+.carright{
+	float: right;
+}
+.duihuan{
+	position:relative;
+	width: 40px;
+	height: 30px;
+	line-height:30px;
+	background: red;
+	display: inline-block;	
+	vertical-align: middle;
+	float: left;
+}
+.duihuan div{
+	color:white;
+	font-size: 14px;
+	text-indent: 5px;
+}
+.carright input{
+	width: 150px;
+	height: 30px;
+	background: #eee;
+	border:none;
+	text-indent: 10px;
+	vertical-align: middle;
+	float: left;
+}
+::-webkit-input-placeholder{
+     font-size: 12px;
+}
+.discount{
+	overflow: hidden;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 20px;
+}
+.zhekou{
+	padding:20px 0;
+}
+.zhekou p{
+	font-size: 14px;
+}
+.zhekou p:last-of-type{
+	padding-bottom:20px;
+	border-bottom:1px solid #ccc;
+}
+.zhekou div{
+	line-height: 100px;
+    float: right;
+    height: 70px;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    padding-bottom: 30px;
+}

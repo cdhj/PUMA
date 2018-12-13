@@ -1,0 +1,76 @@
+//加入普通商品进入购物车
+var addShoppingCartUrl = loxia.encodeUrl(_contextPath + '/shopping/cart/add.json');
+var loadingAddCartItemUrl = loxia.encodeUrl(_contextPath + '/shopping/loadingAddCartItem.json');
+
+$(document).ready(function() {
+	//给标签添加‘加入购物车’事件
+	bindAddShoppingCart();
+});
+
+
+//给标签添加‘加入购物车’事件
+function bindAddShoppingCart(){
+		$(".btn.btn-bg-red.about_but").live("click", (function() {
+			var colorl = $(".goods_about").find(".usa .usa_bor").length;// 判断是否选中颜色
+			// 判断是否选择颜色
+			if (colorl != 1) {
+				$("#prompt").children().remove();
+				$("#prompt").append("<i class='fa fa-exclamation-circle wh'></i><span class='entyou'>请选中商品</span>");
+				return ;
+			}
+			
+			var skuId = $(".size .size-auli li.cur-szbk").attr("skuId");// 从选择尺码列表获取该商品的SKU.ID
+			var count = $("ul.shuliang").find(".cur-bk").text();// 获取加入购物车的数量
+	
+			if (isNullOrEmpty(skuId)) {// 判断skuId和数量
+				$("#prompt").children().remove();
+				$("#prompt").append("<i class='fa fa-exclamation-circle wh'></i><span class='entyou'>商品尺码不为空</span>");
+				return;
+			} else if(isNullOrEmpty(count)) {
+				$("#prompt").children().remove();
+				$("#prompt").append("<i class='fa fa-exclamation-circle wh'></i><span class='entyou'>商品数量不为空</span>");
+				return;
+			}
+			addShoppingCart(skuId, count);
+		}));
+}
+
+//js验证值
+function isNullOrEmpty(value) {
+	if (value == "" || value == null || value == undefined) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * 添加购物车
+ * @param skuId
+ * @param count
+ */
+function addShoppingCart(skuId, count) {
+		if ($(this).hasClass("disabled")) {
+			return;
+		}
+		// 增加到购物车
+		var json = {
+			"skuId" : skuId,
+			"count" : count
+		};
+		var  result = loxia.syncXhrPost(addShoppingCartUrl, json);
+		//console.log(result);
+		if(result.isSuccess){
+			// /购物车弹出层显示消失
+			var data = loxia.syncXhr(loadingAddCartItemUrl, json);
+			$(".menu-cart-all").html(data);
+			$('.menu-car').mouseenter();
+			//3秒消失
+			$(".menu-container-cart").fadeIn("normal").delay(3000).fadeOut("normal");
+			refreshCart();
+		}else{
+			$("#prompt").children().remove();
+			$("#prompt").append("<i class='fa fa-exclamation-circle wh'></i><span class='entyou'>"+result.description+"</span>");
+		}
+}
+

@@ -1,0 +1,401 @@
+
+/*banner*/
+.banner{
+	width: 100%;
+	position:relative;
+	height: 530px;
+	margin-bottom:50px;
+}
+
+.swiper-container {
+	width: 100%;
+	height: 100%;
+
+}
+.swiper-slide {
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+.swiper-slide div{
+	width: 100%;
+	height: 100%;
+}
+.swiper-slide .title{
+	position: relative;
+	
+}
+.words{
+	position:absolute;
+	z-index: 3;
+	text-align: left;
+	left:80px;
+	top:50px;
+}
+.w2{
+	left:40%;
+}
+.w3{
+	left: 60%;
+}
+.w5{
+	top:45%;
+	left:75%;
+}
+.swiper-slide img{
+	position: absolute;
+	width: 100%;
+	height: 90%;
+	left:0;
+}
+.words h2{
+	left:0px;
+	font-size: 54px;
+	color:white;
+	line-height: 76px;	
+}
+.words h5{
+	font-size: 28px;
+	color:white;
+	line-height: 50px;	
+}
+.w3 h2, .w3 h5{
+	color:black;
+}
+.words .btnImg{
+	position: relative;
+	margin-top: 30px;
+	width: 100px;
+	height: 30px;
+	float: left;
+	margin-right:20px;
+}
+.words .btnImg a{
+	text-align: center;
+	display: block;
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	background: black;
+	font-size: 12px;
+	color:white;
+}
+.words .sanJaoImg{
+	position: absolute;
+	top:2px;
+	right:2px;
+	width: 0;
+	height: 0;
+	border:4px solid transparent;
+	border-right-color:white;
+	border-top-color:white;
+}
+/*50周年*/
+.years{
+	width: 100%;
+	position:relative;
+}
+.years img{
+	display: block;
+}
+.years .btnImg1{
+	position: absolute;
+	left: 70%;
+	top:60%;
+	width: 100px;
+	height: 30px;
+}
+.years .btnImg1 a{
+	text-align: center;
+	display: block;
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+	color:white;
+	background: red;
+}
+
+.years .sanJaoImg{
+	position: absolute;
+	top:2px;
+	right:2px;
+	width: 0;
+	height: 0;
+	border:4px solid transparent;
+	border-right-color:white;
+	border-top-color:white;
+}
+/*观看视频*/
+.movie{
+	padding:52px 50px 0px 50px;
+	text-align: center;
+	height: 618px;
+	overflow: hidden;
+}
+h1{
+	font-size: 34px;
+	color:#333333;
+}
+.movie h3{
+	font-size: 26px;
+	color:#505861;
+	font-weight: 100;
+	padding-bottom: 26px;
+}
+.movie .main{
+	height: 456px;
+}
+.movie .main img{
+	width:  100%;
+	display:block;
+}
+.movie .main .videoLeft{
+	float:left;
+	height: 515px;
+	width: 73%;
+	position: relative;
+}
+.movie .main .videoLeft .play{
+	width: 84px;
+	height: 58px;
+	position: absolute;
+	left:50%;
+	top:50%;
+	margin-left:-42px;
+	margin-top: -29px;
+}
+.movie .main .videoRight{
+	height: 515px;
+	float:right;
+	width: 25%;
+	overflow-y: scroll;
+}
+.videoRight img{
+	margin-bottom: 10px;
+}
+
+ /*潮型秋冬*/
+.cool{
+	width: 100%;
+	position: relative;
+}
+.coolDiv img{
+	display: block;
+	width: 100%;
+}
+.coolBtn{
+	height: 30px;
+	position: absolute;
+	top:60%;
+	left: 35%;
+}
+.coolDiv .btnImg{
+	position: relative;
+	margin-top: 30px;
+	width: 100px;
+	height: 30px;
+	float: left;
+	margin-right:20px;
+}
+
+.coolBtn .btnImg a{
+	text-align: center;
+	display: block;
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+	color:white;
+	background: black;
+}
+.coolBtn .sanJaoImg{
+	position: absolute;
+	top:2px;
+	right:2px;
+	width: 0;
+	height: 0;
+	border:4px solid transparent;
+	border-right-color:white;
+	border-top-color:white;
+}
+
+/*当季热卖*/
+.sale{
+	width:100%;
+	text-align: center;
+	padding:75px 0 52px 0;
+	overflow: hidden;
+}
+.saleDiv{
+	width: 1200px;
+	margin: 0 auto;
+}
+.sale h1{
+	margin-bottom: 36px;
+}
+.saleMain{
+	float:left;
+	width: 33.33%;
+	
+}
+.saleMain .imgBox{
+	width: 378px;
+	height: 244px;
+	overflow: hidden;
+}
+.saleMain img{
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+.saleMain h3{
+	padding-top: 20px;
+	font-size: 22px;
+	color:#777777;
+	padding-bottom: 14px;
+}
+.saleMain p a{
+	font-size: 14px;
+	color:#2c292c;
+	text-decoration: underline;
+}
+
+/*新品上市*/
+.new{
+	width: 100%;
+	text-align: center;
+	padding-top: 54px;
+}
+.newDiv{
+	width:1100px;
+	margin: 0 auto;
+}
+.newgood{
+	width: 100%;
+	height: 
+}
+.newDiv .main{
+	position:relative;
+	margin-top: 50px;
+}
+.newDiv .bigDiv{
+	width: 1000px;
+	margin:0 auto;
+	overflow: hidden;
+}
+.newDiv .smallDiv{
+	width: 2000px;
+	height: 320px;	
+	margin: 0 auto;
+	position: relative;
+	left: 0;
+}
+.newImg{
+	float:left;
+	margin-left: 30px;
+	position: relative;
+	text-align: center;
+}
+.newImg img{
+	display: block;
+	border-radius: 50%; 	
+}
+.imgBox2{
+	width: 300px;
+	height: 300px;
+	overflow: hidden;
+}
+.content {
+	width: 320px;
+	position:absolute;
+	font-size: 28px;
+	color: white;
+	top:50%;
+	margin-top: -30px;
+}
+.main .icon-xiaoyu{
+	position: absolute;
+	left:0;
+	top:135px;
+	color:gray;
+	font-size: 60px;
+}
+.main .icon-dayu{
+	position: absolute;
+	right:0;
+	top:135px;
+	font-size: 60px;
+	color:gray;
+}
+
+/*热卖推荐*/
+.hot{
+	width: 100%;
+	padding-bottom: 52px;
+}
+.hot .bigDiv{
+	width:1100px;
+	text-align: center;
+	margin: 0 auto;
+	position: relative;
+}
+
+.hottDiv{
+	width: 1000px;
+	margin:0 auto;
+	overflow: hidden;
+}
+.hotDiv{
+	width: 2000px;
+	margin:0 auto;
+	position: relative;
+	overflow: hidden;
+	left: 0;
+}
+.goods{
+	float:left;
+	width: 220px;
+	text-align: center;
+	margin-right: 35px;
+}
+.goods a{
+	font-size: 12px;
+	color:#8e8e8e;
+}
+.goods span{
+	font-size: 12px;
+	color:#8e8e8e;
+}
+.goods img{
+	display: block;
+	width: 220px;
+	height: 220px;
+}
+.hot .icon-dayu{
+	position: absolute;
+	right:0;
+	top:155px;
+	font-size: 60px;
+	color:gray;
+}
+.hot .icon-xiaoyu{
+	position: absolute;
+	left:0;
+	top:155px;
+	color:gray;
+	font-size: 60px;
+}

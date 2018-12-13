@@ -1,0 +1,494 @@
+@charset "utf-8";
+
+.checkout-container {
+	max-width: 1200px;
+	padding: 0px 10px;
+	font-family: "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+	margin: 80px auto 10px;
+}
+.checkout-content {
+	position: relative;
+	margin-bottom: 45px;
+}
+.checkout-content .checkout-title {
+	margin-bottom: 12px !important;
+}
+.checkout-content .col-10-6 {
+	padding: 0px 3.2% 0px 0px;
+}
+.checkout-content .col-10-4 {
+	padding: 0px 0px 0px 1%;
+}
+.checkout-content .center-address {
+	position: relative;
+	min-height: 1px;
+}
+
+/*----------------最后一步，完成资料----------------*/
+.pad-carlogin {
+	font-family: "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+	color: #333;
+}
+.pad-carlogin .prompt {
+	font-family: "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #666;
+	letter-spacing: 1px;
+	margin: 0;
+}
+.pad-carlogin .prompt span {
+	color: #f00;
+	font-size: 14px;
+}
+.organizing_data_con {
+	width: 500px;
+	font-size: 14px;
+	color: #333;
+}
+.organizing_data_con .form-input input {
+	border-radius: 0;
+	border-color: #eaeaea;
+	font-size: 12px;
+}
+.organ_data_box {
+	padding: 19px 0;
+	width: 100%;
+}
+.organizing_data_con label {
+	font-weight: normal;
+	letter-spacing: 0px;
+	display: block;
+}
+label span {
+	color: #f00;
+}
+.organ_data_gender .xb {
+	display: flex;
+	float: left;
+	vertical-align: middle;
+	margin-top: 5px;
+	cursor: pointer;
+}
+.organ_data_gender .xb_n {
+	margin-right: 20px;
+}
+.organ_data_gender i {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-right: 20px;
+}
+.xb_tur {
+	background: url(../images/account/xb_img1.jpg) !important;
+}
+.xb_fal {
+	background: url(../images/account/xb_img2.jpg);
+}
+.fon_siz {
+	line-height: 25px !important;
+	font-size: 0 !important;
+}
+.organ_data_sub {
+	margin-top: 19px;
+	width: 200px;
+	margin-bottom: 43px;
+}
+.org_inp_over {
+	border: 1px solid #999 !important;
+	background: #ccc !important;
+}
+.mar-top {
+	margin-top: 25px;
+}
+.jianju {
+	padding: 8px 0;
+}
+.new-pad-carlogin .check-txt {
+	font-size: 12px !important;
+}
+.new-pad-carlogin .check-txt i {
+	font-size: 14px;
+}
+
+/*----------------忘记密码----------------*/
+.checkout-content .checkout-title-forget {
+	font-size: 40px;
+	letter-spacing: 8px;
+	font-family: "geogtq-sb", "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+	border-bottom: 3px solid #333;
+	margin-bottom: 12px;
+	font-weight: bold;
+}
+.pad-carlogin .prompt-forget {
+	font-family: "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #333;
+	letter-spacing: 1px;
+	padding-top: 6px;
+	margin: 0;
+}
+.organizing_data_con_forget {
+	width: 702px;
+	font-size: 14px;
+	color: #333;
+}
+.password_sub {
+	margin-top: 40px;
+	width: 200px;
+	margin-bottom: 43px;
+}
+.organizing_data_con_forget .form-input input {
+	border-radius: 0;
+	border-color: #eaeaea;
+	font-size: 12px;
+}
+.organizing_data_con_forget label.control-label {
+	font-weight: normal;
+}
+.organizing_data_con_forget {
+	margin-top: 14px;
+}
+
+/*----------------创建账户----------------*/
+.wrong {
+	font-size: 30px;
+	margin-left: 20px;
+	vertical-align: middle;
+}
+.cuo {
+	position: absolute;
+	right: -50px;
+	top: 0;
+	color: #F00;
+}
+/**************谢楠****************/
+.bcuo {
+	position: absolute;
+}
+.cuo2 {
+	position: absolute;
+	color: #F00;
+}
+
+.form-input input.inp_yzm {
+	width: 73.4%;
+}
+.hid {
+	display: none;
+}
+
+/*----------------账号登录——新----------------*/
+.cartlogin-form-heig {
+	height: 561px !important;
+}
+.new-cart-page-p {
+	font-family: "geogtq-md", "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	margin-bottom: 15px;
+}
+.form-checkbox .new-check-txt {
+	padding: 0;
+	font-size: 12px;
+}
+.new-logincheck-a {
+	font-size: 12px;
+}
+.form-group .form-input .new-login-btn {
+	background: #eaeaea;
+}
+.Other-login-box {
+	width: 100%;
+	border-top: 1px dashed #d0d0d0;
+	margin-top: 10px;
+}
+.Other-login-lab {
+	font-family: "SimHei";
+	font-size: 14px;
+	padding: 20px 0 15px;
+}
+.Other-login-box i {
+	display: block;
+	width: 30px;
+	float: left;
+	height: 30px;
+	margin-bottom: 10px;
+	margin-right: 20px;
+}
+.wb {
+	background: url(../images/account/Other-login-img.png);
+}
+.wx {
+	background: url(../images/account/Other-login-img.png) 80px;
+}
+.zfb {
+	background: url(../images/account/Other-login-img.png) 161px;
+}
+.organizing_data_con1 {
+	width: 550px;
+	font-size: 14px;
+	color: #333;
+}
+.organ_data_box1 {
+	width: 91%;
+	padding: 19px 0;
+}
+.organizing_data_con_wid {
+	width: 550px !important;
+}
+
+/*myaccount member*/
+.myaccount-container .red{
+	background: transparent!important;
+}
+.myaccount-container{
+	margin-top: 60px;
+}
+.myaccount-lf-tit,.myaccount-rt-tit{
+	font-size:24px;
+    font-family: "geogtq-sb","微软雅黑", "黑体","宋体", Arial,Helvetica,sans-serif;
+    border-bottom: 1px solid #ccc;
+    margin-bottom:18px;
+    padding-bottom: 18px;
+    font-weight: bold;
+}
+.myaccount-left-nav li{
+	margin-bottom: 8px;
+}
+.myaccount-left-nav a{
+	font-size: 12px; 
+	color: #666;
+	font-family: 'geogtq-md', "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+}
+.myaccount-left-nav a.current-nav{
+	color: #f00;
+}
+.myaccount-lf-tit-margTop{
+	margin-top: 30px;
+}
+.myaccount-rt-tip{
+	font-family: 'geogtq-md', "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+	color: #666;
+	font-size: 14px;
+}
+.myaccount-personinfo{
+	width: 500px;
+	margin-top: 10px;
+}
+.myaccount-personinfo .checkout-form-row-1 .col-10-3 .form-input{
+	width: 100%;
+}
+.myaccount-personinfo .checkout-form-row-1 .col-10-7{
+	width: 68%;
+}
+.myaccount-personinfo .checkout-form-row-1 .col-10-7 .form-input{
+	margin-right: 3%;
+}
+.myaccount-personinfo .checkout-form-row-1 .col-10-3{
+	width: 32%;
+}
+.reset-pasd{
+	margin-top: 40px;
+	padding-bottom: 8px;
+}
+.help-block-tip{
+	display: block;
+	color: #333333;
+}
+.myaccount-personinfo.checkout-red{
+	border: none;
+}
+.form-confirm .btn.myaccount-save{
+	float: left;
+}
+.form-input-hasyzm{
+	position: relative;
+}
+.drop-select-wrap .btn.myaccount-yzm{
+	background: #f00;
+	border-radius: 0;
+    color: #ffffff;
+    height: 29px;
+    line-height: 29px;
+    padding: 0 15px;
+    font-size: 12px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.drop-select-wrap .btn.myaccount-yzm:hover{
+	background: #000;
+}
+label.check-txt.label-radip-con{
+	margin: 0;
+	cursor: pointer;
+	line-height: 29px;
+	height: 29px;
+	margin-left: 28px;
+}
+.icon-radio-btn{
+	width: 16px; 
+	height: 31px; 
+	display: inline-block;
+	background: url(../images/myaccount/radio-icon.png) center no-repeat;
+	margin-right: 20px;
+	vertical-align: top;
+}
+label.check-txt.label-radip-con:first-child{
+	margin-left: 0;
+}
+.icon-radio-btn.current{
+	background: url(../images/myaccount/radio-icon-cur.png) center no-repeat;
+}
+.personinfotit-wid7{
+	width: 70%;
+}
+
+/*myaccount-address start*/
+.myaccount-address-box .add-address {
+    padding: 0px 27px 0px 42px;
+    height: 30px;
+	float: right;
+	font-family: 'geogtq-sb', "微软雅黑", "黑体","宋体", Arial, Helvetica, sans-serif;
+}
+.myaccount-address-box .add-address .fa {
+    font-size: 10px;
+    color: #FFF;
+    left: 25px;
+    top: 6px;
+    border-color: transparent;
+    margin-right: 5px;
+}
+.myaccount-address-box .myaccount-rt-tit {
+    margin-bottom:0px;
+}
+.myaccount-address-box .personinfotit-wid7{
+	width:100%;
+}
+.myaccount-address-box .target-pages-all{
+	float:right;
+}
+.myaccount-address-box .target-pages{
+	float:right;
+}
+.myaccount-address-box .center-address .myaccount-address-content {
+    font-size: 14px;
+    min-height: 114px;
+    padding: 34px 8px;
+    margin-bottom:0px;
+	border:0px solid #EAEAEA;
+    border-bottom: 1px solid #ccc;
+}
+.myaccount-address-content .center-info {
+    min-height: 20px;
+    margin-bottom: 2px;
+}
+.myaccount-address-content .up_adress {
+    display: none;
+    left: 18px;
+    bottom: 0px;
+    background: transparent none repeat scroll 0% 0%;
+    color: #F00;
+    font-size: 25px;
+}
+.myaccount-address-content i {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    color: #FFF;
+    background: #EAEAEA none repeat scroll 0% 0%;
+    width: 20px;
+    height: 20px;
+    padding: 4px;
+}
+.center-address .myaccount-address-content .myaccount-address-edit {
+	position:relative;
+    text-align: right;
+}
+.center-address .myaccount-address-content .myaccount-address-edit a {
+    font-size: 14px;
+    color: #999;
+    text-decoration: underline;
+    display: block;
+    min-height:20px;
+	margin-bottom: 2px;
+}
+.center-address .myaccount-address-content .myaccount-address-edit a.myaccount-remove {
+	position: absolute;
+	top: 22px;
+	right: 0px;
+	width: 100%;
+}
+
+.myaccount-center-address{
+	position:relative;
+}
+.myaccount-center-address .checkout-red {
+	border-top: 4px solid #F00;
+    border-bottom: 4px solid #F00;
+    margin-bottom:0px;
+	padding: 40px 0px 0px;
+}
+
+.myaccount-center-address .checkout-red .close-icon,
+.myaccount-address-box .checkout-form-container .close-icon {
+    display: block;
+    position: absolute;
+    right: 0px;
+    top: 20px;
+    width: 21px;
+    height: 21px;
+    background-color: #000;
+    cursor: pointer;
+}
+.myaccount-address-box .checkout-form-container {
+	padding: 40px 0px 0px;
+}
+/*myaccount-address end*/
+
+
+.use-records{
+	color:#999;
+	border-top:1px solid #999;
+	border-bottom:none;
+	padding-top: 18px;
+	padding-bottom:4px;
+	margin-bottom:0;
+}
+.use-records-content ul{
+	font-size:0;
+}
+.use-records-content ul li{
+	display: inline-block;
+	width:25%;
+	text-align: center;
+	padding:14px 0;
+}
+.use-records-content >ul >li {
+	font-size:14px;
+	font-family: "geogtq-sb","微软雅黑", "黑体","宋体", Arial,Helvetica,sans-serif;
+	color:#000;
+	font-weight: bold;
+	border: 1px solid #999;
+}
+.use-records-content >ul >li:nth-child(4n+2),.use-records-content >ul >li:nth-child(4n+3),.use-records-content >ul >li:nth-child(4n+4){
+	border-left:none;
+}
+.records-content ul li span{
+	font-size:14px;
+	font-family: "geogtq-sb","微软雅黑", "黑体","宋体", Arial,Helvetica,sans-serif;
+	color:#999;
+	text-align: center;
+}
+.records-content ul li{
+	border-bottom:1px solid #999;
+	border-right:1px solid #999;
+}
+.records-content ul li:nth-child(4n+1){
+	border-left:1px solid #999;
+	
+@media screen and (max-width:1223px) {
+.list-container .col-10-7 {
+  width: 79%;
+  max-width:79%;
+	}
+}

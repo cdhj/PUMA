@@ -1,0 +1,113 @@
+.login{
+	width: 100%;
+}
+.loginDiv{
+	width: 1080px;
+	margin:0 auto;
+	padding: 80px 20px;
+	overflow: hidden;
+}
+.loginDiv h2{
+	padding-bottom: 5px;
+	font-size: 42px;
+	color:#333;
+	border-bottom: 3px solid #393125;
+	margin-bottom: 5px;: 
+}
+.loginDiv .mainLeft{
+	height: 499px;
+	float:left;
+	margin-right:20px;
+	width: 30%;
+	border: 1px solid #eee;
+}
+.leftDiv{
+	padding: 30px;
+}
+.loginDiv .mainLeft h3{
+	margin-bottom:10px;
+	padding-bottom:10px;
+	font-size: 24px;
+	color:#333;
+	border-bottom: 1px dashed #393125;
+}
+.leftDiv p{
+		margin-bottom: 10px;
+}
+.leftDiv .all{
+	color:red;
+	font-size: 12px;
+}
+.leftDiv .tip{
+	color:black;
+	font-size:  14px;
+}
+
+.leftDiv .allInput{
+	margin-top:20px;
+	overflow: hidden;
+}
+.leftDiv input{
+	margin-top: 10px;
+	text-indent:10px;
+	background: #eee;
+	border:none;
+	width: 230px;
+	height: 30px;
+}
+.leftDiv .radio{
+	width: 15px;
+	height: 15px;
+	margin-right: 15px;
+	float:left;
+}
+.leftDiv #submit{
+	width: 200px;
+	height: 40px;
+	background: red;
+	color:white;
+	cursor: pointer;
+}
+.leftDiv .subDiv{
+	width: 200px;
+	height: 50px;
+	position:relative;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+
+.leftDiv .subDiv .sanJao4{
+	margin-top:10px;
+	position: absolute;
+	top:2px;
+	right:2px;
+	width: 0;
+	height: 0;
+	border:4px solid transparent;
+	border-right-color:white;
+	border-top-color:white;
+}
+.leftDiv .bot{
+	border-top: 1px dashed #393125;
+}
+.check{
+	overflow: hidden;
+}
+
+.leftDiv .tip1{
+	margin-top:10px; 
+	float: left;
+	color:black;
+	font-size:  14px;
+}
+.leftDiv .tip2{
+	margin-top:10px; 
+	float: right;
+	color:black;
+	text-decoration: underline;
+	font-size:  14px;
+}
+.bot p{
+	margin-top: 10px;
+	font-size: 14px;
+}

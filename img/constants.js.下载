@@ -1,0 +1,18 @@
+var commonUtils = {
+		
+	isMobile:function(mobile){
+		var mobileRegx = /^((1[0-9]{1})+\d{9})$/;
+		return mobileRegx.test(mobile);
+	},	
+
+	isTelphone:function(telphone){
+		var telphoneRegx = /^(([0\+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/;
+		return telphoneRegx.test(telphone);
+	},
+	
+	isPostcode:function(postcode){
+		var postcodeRegx = /^[1-9][0-9]{5}$/;
+		return postcodeRegx.test(postcode);
+	}
+		
+};

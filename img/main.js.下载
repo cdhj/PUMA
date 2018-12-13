@@ -1,0 +1,588 @@
+//支付失败页面倒计时，变量
+var countdown_num = sessionStorage["countdown_num"];
+
+///修改购物车状态
+var modifyShoppingCartState = loxia.encodeUrl(_contextPath + '/shopping/cart/changeState.json');
+var isflag = false;
+var checkOut_customDialog;	/** 提示框alert   拟态框	全局变量 用于多个页面的调用 */
+var customCart;				/** 确认框confirm 拟态框	全局变量 用于多个页面的调用 */ 
+$(document).ready(function() {
+	// 顶部导航浮动效果
+	$(window).on('scroll', function(){
+		// 获取当前滚动的值
+		var scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+		// 设置导航悬浮效果
+		$('#header')[scrollTop > 51 ? 'addClass' : 'removeClass']('header-fix');
+
+		$('.menu-cart-all')[scrollTop > 51 ? 'addClass' : 'removeClass']('menu-fix');
+
+		$('.subnavigationbar')[scrollTop > 51 ? 'addClass' : 'removeClass']('menu-fix');
+
+	});
+	//国家显示层
+	$('.regions .site-focus').mouseenter(function() {
+		$('.down-arrow-icon').addClass("cur-down-arrow");
+		$('.layer-regions').fadeIn('slow');
+	});
+
+	$('.regions .site-focus',this).mouseleave(function() {
+		$('.down-arrow-icon').removeClass("cur-down-arrow");
+		$('.layer-regions').hide();
+	});
+
+	// 顶部导航二级菜单
+	$('.menu-category li:not(".nav-cat-root")').mouseenter(function(){
+       $('.nav-primary i',this).show();
+       $('.nav-expand', this).addClass('nav-render');
+	});
+
+	$('.menu-category li:not(".nav-cat-root")').mouseleave(function(){
+       $('.nav-primary i',this).hide();
+       $('.nav-expand', this).removeClass('nav-render');
+	});
+
+	//首页kv轮播
+	$('.scroll')[0] && $('.scroll').kvScroll({
+		types: 'scroll-loop',
+        autoPlay: true, 
+        loop: true, 
+        left: '.arrow-left', 
+        right: '.arrow-right'
+    });
+
+    $('.scroll').mouseenter(function(){
+        $('.arrow-left',this).removeClass('none').find().addClass('none');
+        $('.arrow-right',this).removeClass('none').find().addClass('none');
+    });
+    $('.scroll').mouseleave(function(){
+       $('.arrow-left',this).addClass('none').find().removeClass('none');
+       $('.arrow-right',this).addClass('none').find().removeClass('none');
+    });
+    
+    
+    /** 购物车浮层IE8处理*/
+    if ($.browser.msie && $.browser.version <= 8){
+    	// 监听窗口变化事件
+    	$(window).on('load resize scroll', function(){
+    		// 获取当前屏幕宽度
+    		var ww  = $(window).width(),
+    			ele = $('.menu-container-cart'),
+    			r   = 19,
+    			r2  = 19;
+
+    		if (ww <= 1680){
+    			r = 15;
+    		}
+    		if (ww <= 1520){
+    			r = 11;
+    		}
+    		if (ww <= 1320){
+    			r = 4;
+    		}
+
+    		$(ele).css('right', r + '%');
+    		$(ele).find('.menu-cart-all').css('right', ($('.header').hasClass('header-				fix') ? r : r2) + '%');
+    	});
+    }
+
+    /** end*/
+    
+    /**文字轮播**//*
+    function marquee(container){
+    	   
+        var animateContainer = $('span', container),
+            h_c = $(container).outerHeight(),       // 获取元素显示高度
+            w_a = $(animateContainer).outerWidth(),   // 获取文字显示宽度
+            x   = w_a,
+            myInter = null;
+
+
+        // 容器初始化
+        $(animateContainer).css({
+            position: 'relative',
+            display: 'inline-block',
+            overflow: 'hidden',
+            width: w_a,
+            height: h_c,
+            'line-height': h_c + 'px'
+        });
+
+        // 添加滚动元素
+        var animateElement = $('<span>').text(animateContainer.text()).css({
+            position: 'absolute',
+            left: w_a,
+            top: 0,
+            width: w_a
+        }).appendTo(animateContainer.empty());
+
+
+        function moveTo(){
+
+            myInter = setInterval(function(){
+                // 每次执行减1px
+                --x <= - w_a && (x = w_a);
+                // 更新当前位置
+                animateElement.css('left', x);
+            }, 1000 / 60);
+        }
+
+        moveTo();
+     }
+
+     marquee('.simple-banner-content');
+
+
+    */
+  
+
+    /**end*/
+    
+    
+    var cartvertical = null;
+    //迷你购物车
+    $('.menu-car').live("mouseenter",function() {
+		$('.menu-container-cart').stop(true, true).fadeIn('slow');
+
+		$('.menu-container-cart')[$('#header').hasClass('header-fix') ? 'addClass' : 'removeClass']('menu-container-cart-fixed');
+		if ($.browser.msie){
+			if (typeof vertical != 'undefined' && !cartvertical){
+				cartvertical = new vertical('.menu-container-cart', {
+					elements: '.swiper-slide',
+					prev: '.menu-container-cart .btn-arrow-ns-red-left',
+					next: '.menu-container-cart .btn-arrow-ns-red-right',
+					disable: 'swiper-button-disabled',
+					visibles: 2,
+					circle: false
+				});
+			}
+		} else {
+			new Swiper('.menu-cart-all .swiper-container', {
+	            centeredSlides : false,
+				slidesPerView : 'auto',
+	 			nextButton : '.menu-cart-all .btn-arrow-ns-red-right',
+				prevButton : '.menu-cart-all .btn-arrow-ns-red-left',
+	            direction: 'vertical'
+		    });
+		}
+    	
+/*    	if (isflag) {
+			return;
+		}
+		
+    	
+    	isflag = true;
+    	var url = loxia.encodeUrl(_contextPath + '/shopping/loadingAddCartItem.json');
+    	
+		loxia.asyncXhrPost(url, {
+			"skuId" : '',
+			"count" : ''
+		}, {
+			successHandler : function(result, textStatus) {
+				if (textStatus) {
+					
+
+				}
+			}
+		});*/
+	});
+
+	$('.menu-car,.menu-container-cart').live("mouseleave",function(e) {
+		var toElement 	= e.relatedTarget,	// 当触发离开事件时.鼠标进入的第一个元素
+			incontainer = $(toElement).closest('.menu-container-cart,.menu-car');	// 查找这个元素是否在 .menu-container-cart 或 .menu-car 元素内部
+		if (incontainer.length == 0){
+			// 表示鼠标离开 .menu-car 元素后,没有进入了 .menu-container-cart 或 .menu-car 元素内部
+			// 元素没有进入 .menu-container-cart 或 .menu-car 内部, 则隐藏
+			$('.menu-container-cart').stop(true, true).fadeOut('slow');
+			isflag = false;
+		}
+	});
+   //多选框按钮
+//   $('.check-txt').click(function(){
+//		if($(this).find("i.fa").hasClass("check-selected")){
+//			$(this).find("i.fa").removeClass("check-selected");
+//		}else{
+//			$(this).find("i.fa").addClass("check-selected");
+//		}
+//	});
+	
+	//多选
+	$(".e-login-radio").click(function() {
+	    $(this).find("i").toggleClass("is-selected");
+	});
+
+
+    //pdp 部分效果
+    
+    //选择颜色
+//	$('.usa li').click(function(){
+//		$(this).addClass('usa_bor').siblings().removeClass('usa_bor');
+//	});
+	$('.swatch-list li').click(function(){
+		$(this).addClass('usa_bor').siblings().removeClass('usa_bor');
+	});
+	//尺码
+//	$('.size .size-auli li').click(function(){
+//       $(this).addClass('cur-szbk').siblings().removeClass('cur-szbk');
+//	});
+	//之前是下拉框，现在不是，不需要
+//	$('.ul_chima li').click(function(){
+//		var v = $(this).text();
+//		$('.size b').text(v);
+//		$('.drop-down-enter').hide();
+//		$(this).addClass('cur-bk').siblings().removeClass('cur-bk');
+//	});
+
+	//数量
+//	$('.count .drop-down').click(function(){
+//	   if($(".size .size-auli li.cur-szbk").attr("skuId")){
+//			$('.shuliang').show();
+//	   }
+//       $('.drop-down-enter').hide();
+//
+//       mousedownelement('ul.shuliang');
+//	});
+//	$('.shuliang li').click(function(){
+//		var v = $(this).text();
+//		$('.count b').text(v);
+//		$('.shuliang').hide();
+//		$(this).addClass('cur-bk').siblings().removeClass('cur-bk');
+//	});
+
+//	function mousedownelement(element){
+//		$(window).off('mouseup').on('mouseup', function(e){
+//			if ($(e.target).closest('.drop-down').length == 0){
+//				$(element).hide();
+//			}
+//		});
+//	}
+
+	//弹层效果
+//	if ($('.email-dialog')[0]){
+//		var customDialog = spice.dialog({
+//	    template: $('.email-dialog')[0].outerHTML,
+//	    btnCloseClass: '.dialog-close', 
+//	    btnSuccessClass: '.btn', 
+//	    submit: function(){
+//	        //点击确认之后需要做的事情
+//	        customDialog.hide();
+//	    }
+//	});	
+//
+//	$('.spice-black-opacity').on('click', function(){
+//		customDialog.hide();
+//	});
+//
+//    //点击触发事件
+//	$('.header .slot-menu-1').on('click', 'a', function(e){
+//		e.preventDefault();
+//		customDialog.show();
+//	});
+//
+//	$('.cart_list').on('click', '.goods_delect', function(){
+//       customDialog.show();
+//      $(this).parents('.cart_list_con').addClass('delwed').siblings().removeClass('delwed');
+//	});
+//    
+//    $('.affirm').click(function(){
+//       	$('.delwed').remove();
+//    });
+//    
+//    $('.del-dialog-qx').on('click', function(){
+//       	customDialog.hide();
+//    });
+//    
+//  }
+	//尺码表关闭按钮在窗口变小的时候加载滚动条
+	/*var window_h = $(window).height();
+	if (window_h < 810) {
+		$(".size-content").css({
+			'height': '500px',
+			'overflow': 'scroll'
+		});
+	};*/
+
+	
+	/** 提示框alert 拟态框 初始化 */
+	checkOut_customDialog = spice.dialog({
+    template: $('#checkOut-dialog').html(),
+    btnCloseClass: '.dialog-close', 
+    btnSuccessClass: '.btn', 
+	    submit: function(){
+	        //点击确认之后需要做的事情
+	    	checkOut_customDialog.hide();
+	    }
+	});	
+
+	/** 确认框confirm 拟态框 初始化 */
+	customCart = spice.dialog({
+	    template: $('#del-cart').html(),
+	    btnCloseClass: '.dialog-close',
+	    btnCancelClass: '.del-dialog-qx',
+	    btnSuccessClass: '.affirm', 
+	    submit: function(){
+	        //点击确认之后需要做的事情
+//	        deleteShoppingCart();
+	        customCart.hide();
+	    }
+	});
+	
+	/** 点击黑罩 隐藏拟态框 */
+	$('.spice-black-opacity').on('click', function(){
+		checkOut_customDialog.hide();
+		customCart.hide();
+	});
+	
+	/** 由于在多个页面中有结算通道 所以将结算的验证通道放在main,js中*/
+	$('.goToCheckOut').live('click',function(){
+		/*$('#useCoupon_pad').hide();
+		$('#useCoupon').hide();*/
+		$('#useCoupon_pad').attr({"disabled":"disabled"});
+		$('#useCoupon').attr({"disabled":"disabled"});
+		
+		var flag = changeShoppingCartState($(this).hasClass("mini-jiez"));
+		if(!flag){
+			return;
+		}
+		var data = loxia.syncXhr(_contextPath+'/transcation/doTranscationCheck.json');
+		if(data.isSuccess == true){
+			/** 校验成功跳转到结算页面 */
+			if(null != data.description&& "" != data.description){
+				 sAlertMessage(data.description);
+				setTimeout(function () {location.href = data.redirectUrl; }, 2000);
+				}else{
+					location.href = data.redirectUrl;
+				}	
+			return false;
+		}else if(data.isSuccess == false){
+			/** 校验不成功跳转到空购物页面*/
+			if(null != data.description && "" != data.description){
+			 sAlertMessage(data.description);
+			setTimeout(function () {location.href = data.redirectUrl; }, 2000);
+			}else{
+				location.href = data.redirectUrl;
+			}			
+			return false;
+		};
+	});
+	
+	/**关于value与placeholder输入框的问题*/
+	// 记录输入框value是否默认就有值
+	$('input[type=text], textarea').each(function(){
+		// 如果默认就有值, 则记录下来
+		this.value && $(this).attr('def', this.value);
+	});
+
+	$('input[type=text], textarea').placeholder();
+
+	// 执行完上面函数后, 还原默认的value值
+	$('input[type=text], textarea').each(function(){
+
+		var def = $(this).attr('def');
+
+		if (def){
+			// 还原value值 
+			this.value = def;
+			// 移除def
+			$(this).removeAttr('def');
+		}
+	});
+	/** end*/
+	 
+	 
+	 /**密码输入框  针对于ie */ 
+	$('.form-group .input-password-style').click(function(){
+		$(this).hide();
+		$(this).next('input').focus();
+	});
+	$('.form-group .input-password-style').next('input')
+		.focus(function(){
+			$(this).prev('b').hide();
+		})
+		.blur(function(){
+			if(!$.trim($(this).val())){
+				$(this).prev('b').show();
+			}
+		});
+	/** end*/
+	
+	
+	/**
+	 * 上新页面http://cn.puma.com/collections/iconic  坑人 要单独做样式 还要写js(看到后帮我删了)
+	 */
+	if(window.location.href.indexOf("collections/iconic") != -1){
+		$(".new-section").addClass("margin-bottom-40");
+		//$(".contnav-tit").text("明星同款");
+	}
+	if(window.location.href.indexOf("collections/liuwen") != -1){
+		$(".section-kv.full-seciton-kv").addClass("margin-bottom-40");
+	}
+	
+	
+});
+
+function changeShoppingCartState(obj) {
+	var skuIdArr = $("#container .fa.fa-check.dis");
+	var skuIds = "";
+	var miniSkuId = $(".mini-menu-cart .mini-cart-image");
+	if(!obj){
+		if(skuIdArr.length > 0){
+			for(var i = 0; i < skuIdArr.length; i++ ){
+				if(typeof($(skuIdArr[i]).attr("skuId")) != "undefined"){
+					skuIds +=  $(skuIdArr[i]).attr("skuId")+",";
+				}
+			}
+		}else{
+			sAlertMessage("必须选中至少一个商品！");
+			return false;
+		}
+	}else{
+		if(miniSkuId.length > 0){
+			for(var i = 0; i < miniSkuId.length; i++ ){
+				if(typeof($(miniSkuId[i]).attr("skuId")) != "undefined"){
+					skuIds +=  $(miniSkuId[i]).attr("skuId")+",";
+				}
+			}
+		}
+	}
+	
+	if(skuIds.length == 0){
+		sAlertMessage("该购物车中商品都已无货或下架！");
+		return false;
+	}
+	var json = {
+			"skuIds" : skuIds
+	};
+	var result =  loxia.syncXhr(modifyShoppingCartState, json);
+	if (result.isSuccess) {
+		return true;
+	}else{
+//		$("#goToCheckOut-dialog .del-dialog-p-sty").html(result.description);
+//		checkOut_customDialog.show();
+		sAlertMessage(result.description);
+		return false;
+	}
+	
+};
+
+/** 
+ * 弹出提示框alert的通用方法调用
+ * 参数		message	提示信息
+ * */
+function sAlertMessage(message){
+	$("#goToCheckOut-dialog .del-dialog-p-sty").html(message);
+	checkOut_customDialog.show();
+}
+
+/** 
+ * 弹出确认框confirm的通用方法调用 
+ * 参数		message 		提示信息
+ * 			submitMethod	点击确认按钮的回调函数
+ * */
+function sConfirmMessage(message,submitMethod){
+	
+	/** 删除原来的结构 */
+	customCart.destroy();
+	
+	/** 重新初始化弹出层结构 */
+	customCart = spice.dialog({
+	    template: $('#del-cart').html(),
+	    btnCloseClass: '.dialog-close',
+	    btnCancelClass: '.del-dialog-qx',
+	    btnSuccessClass: '.affirm', 
+	    submit: function(){
+	    	
+			if(submitMethod)
+				loxia.hitch(submitMethod)();
+	    	
+	        customCart.hide();
+	    }
+	});
+	
+	/** 替换所需要显示的文案 */
+	$(".del-cart .del-dialog-p-sty").html(message);
+	
+	customCart.show();
+	
+}
+//2016-03-03 购物车下拉框偏移（需要根据购物车图标定位）
+$(document).ready(function() {
+	var body_w = $("body").width();
+	var menu_car_left = $(".span-car").offset().left;
+	var menu_container_cart_right = body_w-menu_car_left-32;
+	$(".menu-container-cart,.menu-container-cart-fixed,.menu-fix,.menu-cart-all").css('right', menu_container_cart_right);
+});
+$(window).resize(function() {
+	var body_w = $("body").width();
+	var menu_car_left = $(".span-car").offset().left;
+	var menu_container_cart_right = body_w-menu_car_left-32;
+	$(".menu-container-cart,.menu-container-cart-fixed,.menu-fix,.menu-cart-all").css('right', menu_container_cart_right);
+});
+/*s--------------2016-03-16----------------s*/
+// banner 图片，露头露脚
+function banner_img() {
+	var window_w = $(window).width();
+	// 判断窗口大小
+	if (window_w < 1200) {
+		$(".announcement-picture").each(function(index, data) {
+		    $(".pic-spotlight-athlete img", data).each(function(m, n) {
+		        var banner_img_h = $(this).height();
+		        // banner 判断图片大小
+				if (banner_img_h > 310) {
+					$(this).parent().css('padding', '30px 0');
+				}
+
+
+		    });
+		});
+	}else{
+		$(".announcement-picture").each(function(index, data) {
+		    $(".pic-spotlight-athlete img", data).each(function(m, n) {
+		        var banner_img_h = $(this).height();
+		        // banner 判断图片大小
+				if (banner_img_h > 415 || banner_img_h < 1) {
+					$(this).parent().css('padding', '0');
+				}
+
+
+		    });
+		});
+	}
+}
+$(window).load(function() {
+	banner_img();	
+});
+
+$(window).resize(function() {
+	banner_img();
+});
+$(window).load(function() {
+	var video_list = $(".mCSB_container img").length;
+	console.log(video_list);
+	if (video_list <2) {
+		$(".imgscrobar-all.fLeft").remove();
+		$(".video-da.fLeft").removeClass('fLeft').css({
+			margin: '0 auto',
+		});;
+	}
+});
+/*s--------------2016-03-16----------------s*/
+//2016-03-03 购物车下拉框偏移（需要根据购物车图标定位） end
+
+//自动补全
+$(document).ready(function(){
+	$("#searchKeyWord").one("click" ,function(){ 
+		var url = loxia.encodeUrl(_contextPath + '/autoComplete/findAutoCompleteDate.json');
+    	loxia.asyncXhr(url,null, {
+    		successHandler : function(result, textStatus) {
+    			if (textStatus) {
+    				 $('#searchKeyWord').AutoComplete({  
+    			            'data': result,  
+    			/*             'data': ['12','123','456','abc','a1','你好','ABC','CDF','zha','zhazha','zhahzhh'],   */
+    			            'itemHeight': 20,  
+    			            'width': 280  
+    			        });  
+    			}
+    		}
+    	});        	
+	});
+});  

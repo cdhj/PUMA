@@ -1,0 +1,263 @@
+// JavaScript Document
+//清除放大镜
+function getSizeByCloudZoom() {
+
+	var w = document.documentElement.clientWidth,
+		_w = 340,
+		_h = 450;
+	if (w > 1024) {
+		_w = 460;
+		_h = 560;
+	}
+	return {
+		'w': _w,
+		'h': _h
+	};
+}
+
+function pdpCloudZoom() {
+	var $primaryProductImage = $('.primary-product-image');
+	if ($primaryProductImage != 0) {
+		$('.cloudzoom-blank').remove();
+		var cloudZoom = $primaryProductImage.data('CloudZoom');
+		cloudZoom && cloudZoom.destroy();
+		$primaryProductImage.CloudZoom({
+			animationTime: 0,
+			easeTime: 0,
+			zoomWidth: getSizeByCloudZoom().w,
+			zoomHeight: getSizeByCloudZoom().h,
+			zoomOffsetX: 27
+		});
+	}
+}
+
+
+$(function() {
+	//查看商品
+	$('.goods_carousel .swiper-slide').live('click', function(e) {
+		e.preventDefault();
+
+		$(this).addClass('bor').siblings().removeClass('bor');
+
+		var small = $('img', this).attr('src'),
+			middle = small.replace(/\_80X80\./, '_540X540.'),
+			big = small.replace(/\_80X80\./, '_2000X2000.');
+			/*middle = small.replace(/\-s\./, '.'),
+			big = small.replace(/\-s\./, '-max.');*/
+		$(".goods_img_box .imgbox img").attr('src', middle);
+		$(".goods_img_box .imgbox img").attr("data-cloudzoom", "zoomImage: '" + big + "'");
+		pdpCloudZoom();
+	});
+
+
+	//产品细节左右两块高度一样
+	if ($(window).width() > 1058) {
+		var cz = $(".about_caizhi").height();
+		xj = $(".about_xijie").height();
+		if (cz > xj) {
+			$(".about_xijie").height(cz);
+		} else {
+			$(".about_caizhi").height(xj);
+		}
+	}
+
+});
+
+//全屏
+$(function() {
+	//全屏效果 
+	function launchFullScreen(element) {
+		if (element.requestFullscreen) {
+			element.requestFullscreen();
+		} else if (element.mozRequestFullScreen) {
+			element.mozRequestFullScreen();
+		} else if (element.webkitRequestFullscreen) {
+			element.webkitRequestFullscreen();
+		} else if (element.msRequestFullscreen) {
+			element.msRequestFullscreen();
+		}
+	}
+	//退出全屏
+	function exitFullscreen() {
+		if (document.exitFullscreen) {
+			document.exitFullscreen();
+		} else if (document.msExitFullscreen) {
+			document.msExitFullscreen();
+		} else if (document.mozCancelFullScreen) {
+			document.mozCancelFullScreen();
+		} else if (document.webkitExitFullscreen) {
+			document.webkitExitFullscreen();
+		}
+	}
+
+	function loadImg(src, fn) {
+		if(src != undefined){
+			$('<img src="' + src + '" />').load(function() {
+				var o = new Image();
+				o.src = src;
+				var ow = o.width;
+				oh = o.height;
+				fn(ow, oh);
+			});
+		}
+	}
+	var $win = $(window),
+		$goodsImg = $('#goods_img'),
+		$imgbox = $('.imgbox', $goodsImg),
+		$pdpProImg = $('.primary-product-image', $goodsImg),
+		imgSrc = $pdpProImg.attr('src'),
+		isFullScreen = false,
+		_cloudZoom = function() {
+			$pdpProImg.CloudZoom({
+				animationTime: 0,
+				easeTime: 0,
+				zoomWidth: getSizeByCloudZoom().w,
+				zoomHeight: getSizeByCloudZoom().h,
+				zoomOffsetX: 27
+			});
+		};
+
+	_cloudZoom();
+	if (document.addEventListener) {
+		document.addEventListener('fullscreenchange', function() {
+			isFullScreen = document.fullscreen;
+			fullScreenSetCss(isFullScreen);
+		}, false);
+		document.addEventListener('webkitfullscreenchange', function() {
+			isFullScreen = document.webkitIsFullScreen;
+			fullScreenSetCss(isFullScreen);
+		}, false);
+		document.addEventListener('mozfullscreenchange', function() {
+			isFullScreen = document.mozFullScreen;
+			fullScreenSetCss(isFullScreen);
+		}, false);
+		document.addEventListener("MSFullscreenChange", function() {
+			isFullScreen = document.msFullscreenElement;
+			fullScreenSetCss(isFullScreen);
+		}, false);
+	}
+
+	function fullScreenSetCss(full) {
+		$('.cloudzoom-blank, .cloudzoom-zoom').remove();
+		if (full) {
+			//$imgbox.addClass('fullScreenEvent');
+			$pdpProImg.data('CloudZoom').destroy();
+		} else {
+			$imgbox.css({
+				height: '',
+				width: ''
+			}).removeClass('fullScreenEvent');
+			$('.primary-product-image_max', $imgbox).hide();
+			_cloudZoom();
+		}
+	}
+
+	function fullResize(ow, oh) {
+		var wH = $win.height(),
+			H = $('.goods_carousel', $goodsImg).outerHeight(true) + $('.goods_img_box_icon', $goodsImg).outerHeight(true);
+		var nh = wH - H - 50,
+			nw = nh / oh * ow;
+		$imgbox.css({
+			height: nh,
+			width: nw
+		});
+	}
+	loadImg(imgSrc, function(ow, oh) {
+		$('.fangda', $goodsImg).live("click",function() {
+			if ($.browser.msie && $.browser.version <= 10) {
+				if ($imgbox.hasClass('fullScreenEvent')) {
+					fullScreenSetCss(false);
+					$goodsImg.css({
+						position: ''
+					});
+					$('body,html').css({
+						height: '',
+						overflow: ''
+					});
+				} else {
+					$pdpProImg.data('CloudZoom').destroy();
+					$imgbox.addClass('fullScreenEvent');
+					$goodsImg.css({
+						position: 'fixed'
+					});
+					$win.resize();
+
+					$('body,html').css({
+						height: $win.height(),
+						overflow: 'hidden'
+					});
+				}
+			} else {
+				if (isFullScreen) {
+					exitFullscreen();
+				} else {
+					$imgbox.addClass('fullScreenEvent');
+					launchFullScreen($goodsImg[0]);
+					$win.resize();
+				}
+			}
+		});
+		$win.resize(function() {
+			if ($imgbox.hasClass('fullScreenEvent')) {
+				fullResize(ow, oh);
+			}
+		});
+	});
+
+	$win.keyup(function(e) {
+		var key = e.keyCode || window.event.keyCode;
+		if (key == 27) {
+			if ($.browser.msie && $.browser.version <= 10 && $imgbox.hasClass('fullScreenEvent')) {
+				$('.fangda', $goodsImg).click();
+			}
+		}
+	});
+
+	var $maxImg = $('.primary-product-image_max'),
+		maxImgSrc = $maxImg.attr('src'),
+		showMaxMove = function(e, ow, oh) {
+			var ratio = ow / $imgbox.width() - 1;
+			var imgboxX = $imgbox.offset().left,
+				imgboxY = $imgbox.offset().top;
+			var x = -(e.clientX - imgboxX) * ratio,
+				y = -(e.clientY - imgboxY) * ratio;
+			$maxImg.css({
+				width: ow,
+				height: oh,
+				left: x,
+				top: y
+			}).show();
+		};
+	loadImg(maxImgSrc, function(ow, oh) {
+		$('.fullScreenEvent', $goodsImg)
+			.live('mouseenter mousemove', function(e) {
+				showMaxMove(e, ow, oh);
+			}).live('mouseleave', function(e) {
+				$maxImg.hide();
+			});
+	});
+});
+
+
+
+/*--------------tab切换----------------*/
+$(function(){
+	$('.tab li').on('click', function(){
+		$(this).addClass('cur').parent().siblings().find('li').removeClass('cur');
+		setTimeout(function(){
+			var y = $(window).scrollTop();
+			$(window).scrollTop(y - 50);
+		}, 1000/60);
+	});
+});
+
+
+//切换pdp详情
+$(document).ready(function() {
+	$('.tab_box .tab ul a').on('click', function() {
+		var name = $(this).attr('href').split('#').join('');
+		$('.goos_about>div').removeClass('is-active');
+		$('.'+name).addClass('is-active');
+	});
+});
+

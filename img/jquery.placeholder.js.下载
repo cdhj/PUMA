@@ -1,0 +1,47 @@
+/**
+ *	水印文字插件
+ * @author 梁宏
+ * @version 1.0
+ *
+ */
+
+(function($){
+	$.fn.placeholder = function (options) {
+	    return this.each(function () {
+	    	var $self = $(this);
+	        var config = $.extend({
+	            text		: $self.attr('placeholder') || $self.val()
+	            , cssClass 	: 'placeholder'
+	        }, $.type(options) ==='string'? { text : options } : (options||{}));
+	        
+	        $self.attr('placeholder',config.text).val('');
+	        
+	        if ('placeholder' in document.createElement('input')) {
+	            $self.val('');
+	            return;
+	        }
+
+	        var addPlaceHolder = function() {
+	        	if ($.trim($self.val()) === ''){
+	        		$self.addClass(config.cssClass).val(config.text);
+	        	}
+	        };
+	        var removePlaceHolder = function() {
+	        	if ($self.val() === config.text){
+	        		$self.val('');
+	            }
+	            $self.removeClass(config.cssClass);
+	        };
+
+	        addPlaceHolder();
+
+	        $self
+	        .unbind('.placeholder')
+	        .bind({
+	        	'focus.placeholder'	: removePlaceHolder,
+	        	'blur.placeholder'	: addPlaceHolder
+	        });
+	                
+	    });
+	};
+})(jQuery);

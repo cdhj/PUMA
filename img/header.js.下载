@@ -1,0 +1,1039 @@
+
+	if (Function('/*@cc_on return document.documentMode===10@*/')()) {
+
+	    ['horizontal.js', 'vertical.js'].forEach(function(n, i){
+			var s = document.createElement('script');
+
+		    s.type = 'text/javascript';
+		    s.src = '/scripts/'+ n;
+
+		    document.head.appendChild(s);
+	    });
+	};
+
+
+$(window).load(function() {
+	//自动登陆
+	autoLogin();
+	// 绑定购物车事件
+	//loadMiNiShoppingCart();
+	//更新购物车数量
+	//refreshCart();
+	refreshRecommand(refreshSwiper);
+	
+	$('body').on('click', '.puma_live800', function(){
+		//$('#live800iconlink').click();
+		window.open('http://v2.live800.com/live800/chatClient/chatbox.jsp?companyID=86919&configID=125415&jid=7778484340&delayload=1',"live800","width=800,height=600");
+	});
+	
+/*	$(".season-content.mg-30:eq(1)").addClass("margin-top-100")
+	$(".season-content .contnav-tit:eq(1)").text("");*/
+});
+
+
+$(document).ready(function() {
+	//获取用户名
+	getUserName();
+	
+	//navigationCompose();
+	$('.header,.container').on('click', '.go-search-icon', function(){
+		var keyWord = $(this).prev().val();
+		if(null != keyWord && 0<keyWord.length){
+			window.location.href = _contextPath + "/productALL.htm?keyword=" + keyWord;
+			if(window.location.pathname.indexOf('/productALL.htm')>-1){
+				refreshListContent();
+			}
+		}
+	});
+	
+	$('body').on('keydown', "#searchKeyWord , #noResulthKeyWord", function(e){
+		if(e && e.keyCode==13){
+			var keyWord = $(this).val();
+			if(null != keyWord && 0<keyWord.length){
+				window.location.href = _contextPath + "/productALL.htm?keyword=" + keyWord;
+				if(window.location.pathname.indexOf('/productALL.htm')>-1){
+					refreshListContent();
+				}
+			}
+		}	
+	});
+
+    //分享到微信的URL
+    var puma_weixin  = _contextPath;
+    //二维码的大小
+    var qrobj = {
+    		width : 120, //宽度 
+    		height : 120, //高度 
+    		text : puma_weixin
+    	};
+    //分享到微信
+    $('#puma-weixin').live("click",function() {
+		//$("#puma-weixin-popup").html("<i class='fa fa-caret-left'></i>");
+    	$('#puma-weixin-popup').empty();
+		$("#puma-weixin-popup").qrcode(qrobj);
+		$('#puma-weixin-popup').show();
+		return false;//阻止事件冒泡，不执行点击body触发的事件
+	});
+    
+    //关闭二维码的弹层
+    $('body').live("click",function() {
+		$('#puma-weixin-popup').hide();
+	});
+	
+	 //新浪微博分享
+    $(".sprite-weibo").live("click",(function(){
+    	var content=$(".about_tit").html();
+    	var url=window.location.href;
+    	var img= window.location.protocol + $(".primary-product-image:first").attr("src");
+    	var site="sina";
+    	weiboShare(content, url, img, site);
+    }));
+    
+	//footer订阅电子邮件弹层
+//	$('.footer').on('click', '.inp-search-icon', function(){
+//		customDialog_email.show();
+//	});
+    addkvitemstyle();
+    
+    $('.menu-category .nav-wrap .navli-tit:contains("ICONIC")').addClass('strong');
+});
+//增加kv的样式
+function addkvitemstyle(){
+		//给kv主标题的英文字符添加样式
+		$("h2.headline:has(u)").each(function(){
+			var tempkv = '';
+			var eng = ''; 
+			var zh = '';
+			var engend = false;
+			var zhend = false;
+			for(var i=0; i<$(this).text().length; i++){
+				if(' ' == $(this).text()[i]){
+					tempkv +=$(this).text()[i];
+					continue;
+				}
+				if(/^[A-Za-z0-9%#'"]+$/.test($(this).text()[i])){
+					//英文
+					if(true == zhend){
+						tempkv += '</span>';
+					}
+					if('' == eng){
+						tempkv += '<span class="u-en">';
+					}
+					tempkv +=$(this).text()[i];
+					engend = true;
+					if(i == $(this).text().length-1){
+						tempkv += '</span>';
+					}
+					zh = '';
+					eng = "t";
+					zhend = false;
+				}else{
+					//中文
+					if(true == engend){
+						tempkv += '</span>';
+					}
+					if('' == zh){
+						tempkv += '<span class="u-zh">';
+					}
+					tempkv +=$(this).text()[i];
+					zhend = true;
+					if(i == $(this).text().length-1){
+						tempkv += '</span>';
+					}
+					eng = '';
+					zh = 't';
+					engend = false;
+				}
+			}
+			if(undefined != $(this).find('s') &&  $(this).find('s').length>0){
+				 var span = $(this).find('s span');
+				 $(this).find('s').empty();
+				 $(this).find('s').html(tempkv).prepend($(span));
+				 //$(this).find('s').append($(span)).append($(tempkv));
+			}else if(undefined != $(this).find('u') && $(this).find('u').length>0){
+				var span = $(this).find('u span');
+				$(this).find('u').empty();
+				$(this).find('u').html(tempkv).prepend($(span));
+				//$(this).find('u').append($(span)).append($(tempkv));
+			}else{
+				$(this).html(tempkv);
+			}
+		});
+}
+var refresh = true;
+
+function refreshListContent() {
+	var result = loadListContent(null);
+	if((null != $(result).children('#breadcrumb') && $(result).children('#breadcrumb').length > 0)||(window.location.hash.indexOf("keyword=")>-1 && window.location.hash.indexOf("=")==window.location.hash.lastIndexOf("="))){
+		$('#container').html(result);
+		$('.scroll')[0] && $('.scroll').kvScroll({
+			types: 'scroll-loop',
+	        autoPlay: true, 
+	        loop: true, 
+	        left: '.arrow-left', 
+	        right: '.arrow-right'
+	    });
+		$(".category-level-1 .category-title").list_lf_toggle();
+		priceslider();
+		menuslider();
+		refreshRecommand( refreshSwiper );
+	}else{
+		$('#item_content').html(result);
+	}
+}
+
+
+function loadListContent( isContent ) {
+	var urlHash = window.location.hash;
+	var urlSearch = window.location.search;
+	var pathname = window.location.pathname;
+	
+	var filterHash = urlHash.split("&");
+	var filterSearch = urlSearch.split("&");
+	var pathnames = pathname.split('/');
+	
+	var size = null;
+	var color = null;
+	var sort = null;
+	var lowPrice = null;
+	var highPrice = null;
+	var keyword = null;
+	var row = 20;
+	var pageNo = null; 
+	var categoryArray = "";
+	
+	$(pathnames).each(function(i){
+		categoryArray = categoryArray + pathnames[i] + ",";
+	});
+	categoryArray = categoryArray.substring(0, categoryArray.length-1);
+	
+	var genderCategory = $('#roorCategory').attr('code');
+	var typeCategory = $('#lastCategory').attr('code');
+	var listURL = loxia.encodeUrl(_contextPath + "/productList.htm");
+	
+	$.map(filterSearch, function(obj) {
+		var objMap = obj.split("=");
+		if (2 == objMap.length) {
+			objMap[0] = objMap[0].replace("?", "");
+			if (objMap[0]=="keyword" ) {
+				keyword = objMap[1];
+			}
+		}
+	});
+	
+	$.map(filterHash, function(obj) {
+		var objMap = obj.split("=");
+		if (2 == objMap.length) {
+			objMap[0] = objMap[0].replace("#", "");
+			if ( objMap[0]=="size") {
+				size = objMap[1];
+			} else if (objMap[0]=="color") {
+				color = objMap[1];
+			} else if (objMap[0]=="lowPrice") {
+				lowPrice = parseInt(objMap[1]);
+			} else if (objMap[0]=="highPrice") {
+				highPrice = parseInt(objMap[1]);
+			} else if (objMap[0]=="sort") {
+				sort = objMap[1];
+			} else if (objMap[0]=="row" ) {
+				row = objMap[1];
+			} else if (objMap[0]=="pageNo" && !isNaN(objMap[1])) {
+				pageNo = objMap[1];
+			} else if (objMap[0]=="keyword" ) {
+				keyword = objMap[1];
+			} else if (objMap[0]=="isContent" && null==isContent) {
+				isContent = objMap[1];
+			}
+		}
+	});
+
+	var result = null;
+	if(refresh){
+		refresh = false;
+		result = loxia.syncXhr(listURL, {
+			categories : categoryArray,
+			isContent : isContent,
+			row : row ,
+			gender : genderCategory,
+			type : typeCategory,
+			size : size,
+			color : color,
+			lowPrice : lowPrice,
+			highPrice : highPrice,
+			sort : sort,
+			pageNumber : pageNo,
+			keyword : keyword
+		});
+		refresh = true;
+	}
+	return result;
+}
+
+
+//分享到微博
+function weiboShare(content, url, img, site) {
+	var p, appKey, f, e= encodeURIComponent;
+	if (site == "sina") {
+		appKey = 2946448188;
+		f = 'http://v.t.sina.com.cn/share/share.php?';
+		p = [
+				'url=',	e(url),
+				'&title=',e(content),'&appkey=' + appKey,'&searchPic=false',
+				'&pic=', img
+			].join('');
+	}
+	
+	function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(screen.width-620)/2,',top=',(screen.height-450)/2].join('')))u.href=[f,p].join('');};
+	if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0);}else{a();}
+}
+
+
+function refreshSwiper(){
+	
+	if ($.browser.msie){
+		// 因此js公用,所以需判断horizontal对象是否存在
+		/*为毛这里还有一样的代码？！*/
+		if (typeof horizontal != 'undefined'){
+			$('.recommended-content').each(function(index, el) {				
+				new horizontal($('.swiper-container',el), {
+					elements: '.swiper-slide',
+					prev: $('.btn-arrow-red-left',el),
+					next: $('.btn-arrow-red-right',el),
+					disable: 'swiper-button-disabled',
+					visibles: 4,
+					circle: false
+				});
+			});
+
+
+			/*new horizontal('.buynowshoping .swiper-container', {
+				elements: '.swiper-slide',
+				prev: '.buynowshoping .btn-arrow-red-left',
+				next: '.buynowshoping .btn-arrow-red-right',
+				disable: 'swiper-button-disabled',
+				visibles: 3,
+				circle: false
+			});*/
+			$('.buynowshoping').each(function(index, el) {				
+				new horizontal($('.swiper-container',el), {
+					elements: '.swiper-slide',
+					prev: $('.btn-arrow-red-left',el),
+					next: $('.btn-arrow-red-right',el),
+					disable: 'swiper-button-disabled',
+					visibles: 3,
+					circle: false
+				});
+			});
+
+			new horizontal('.pdp-hero-goods .swiper-container', {
+				elements: '.swiper-slide',
+				prev: '.pdp-hero-goods .btn-arrow-s-red-left',
+				next: '.pdp-hero-goods .btn-arrow-s-red-right',
+				disable: 'swiper-button-disabled',
+				visibles: 5,
+				circle: false
+			});
+			
+
+			new horizontal('.goods_carousel:not(.pdp-hero-goods) .swiper-container', {
+				elements: '.swiper-slide',
+				prev: '.goods_carousel:not(.pdp-hero-goods) .btn-arrow-s-red-left',
+				next: '.goods_carousel:not(.pdp-hero-goods) .btn-arrow-s-red-right',
+				disable: 'swiper-button-disabled',
+				visibles: 4,
+				circle: false
+			});
+			/*new horizontal('.spokesman-width .buynowshoping .swiper-container', {
+				elements: '.swiper-slide',
+				prev: '.spokesman-width .buynowshoping .btn-arrow-s-red-left',
+				next: '.spokesman-width .buynowshoping .btn-arrow-s-red-right',
+				disable: 'swiper-button-disabled',
+				visibles: 6,
+				circle: false
+			});*/
+			
+			$('.spokesman-width .buynowshoping').each(function(index, el) {				
+				new horizontal($('.swiper-container',el), {
+					elements: '.swiper-slide',
+					prev: $('.btn-arrow-s-red-left',el),
+					next: $('.btn-arrow-s-red-right',el),
+					disable: 'swiper-button-disabled',
+					visibles: 6,
+					circle: false
+				});
+			});
+		}
+		
+	} 
+	else {
+
+		 //多图轮播滚动 (小图多度滚动 需要单独提取。所以请引用该js。)
+	    var mySwiper = $('.recommended-content').each(function(index,el) {			
+	    	new Swiper($('.swiper-container',el), {
+	    		centeredSlides : false,
+	    		slidesPerView : 'auto',
+	    		nextButton : $('.btn-arrow-red-right',el),
+	    		prevButton : $('.btn-arrow-red-left',el)
+	    	});
+		});
+
+	    var mySwiper2 = new Swiper('.goods_carousel .swiper-container', {
+				centeredSlides : false,
+				slidesPerView : 'auto',
+	 			nextButton : '.goods_carousel .btn-arrow-s-red-right',
+				prevButton : '.goods_carousel .btn-arrow-s-red-left'
+			});
+
+	    var mySwiper = $('.buynowshoping').each(function(index,el) {			
+	    	new Swiper($('.swiper-container',el), {
+	    		centeredSlides : false,
+	    		slidesPerView : 'auto',
+	    		nextButton : $('.btn-arrow-red-right',el),
+	    		prevButton : $('.btn-arrow-red-left',el)
+	    	});
+		});
+	    /*var mySwiper = new Swiper('.spokesman-width .buynowshoping .swiper-container', {
+			centeredSlides : false,
+			slidesPerView : 'auto',
+ 			nextButton : '.spokesman-width .buynowshoping .btn-arrow-s-red-right',
+			prevButton : '.spokesman-width .buynowshoping .btn-arrow-s-red-left'
+		});*/
+	    
+	    var mySwiper = $('.spokesman-width .buynowshoping').each(function(index,el) {			
+	    	new Swiper($('.swiper-container',el), {
+	    		centeredSlides : false,
+	    		slidesPerView : 'auto',
+	    		nextButton : $('.btn-arrow-s-red-right',el),
+	    		prevButton : $('.btn-arrow-s-red-left',el)
+	    	});
+		});
+	     var mySwiper = new Swiper('.pad-guesslike-conent .swiper-container', {
+				centeredSlides : false,
+				slidesPerView : 'auto',
+	 			nextButton : '.pad-guesslike-conent .btn-arrow-red-right',
+				prevButton : '.pad-guesslike-conent .btn-arrow-red-left'
+			});
+	     
+	     new Swiper('.menu-cart-all .swiper-container', {
+	            centeredSlides : false,
+				slidesPerView : 'auto',
+	 			nextButton : '.menu-cart-all .btn-arrow-ns-red-right',
+				prevButton : '.menu-cart-all .btn-arrow-ns-red-left',
+	            direction: 'vertical'
+	    });
+	     
+	}  
+}
+
+
+////绑定购物车事件，移动显示迷你购物车
+//var isflag = false;
+//// 鼠标悬浮购物车
+//function loadMiNiShoppingCart(){
+//	$(".menu-car.inline-block").mouseover(function() {
+//			if (isflag) {
+//				return;
+//			}
+//			isflag = true;
+//		
+//			var url = loxia.encodeUrl(_contextPath + '/shopping/loadingAddCartItem.json');
+//			loxia.asyncXhrPost(url, {
+//				"skuId" : '',
+//				"count" : ''
+//			}, {
+//				successHandler : function(result, textStatus) {
+//					if (textStatus) {
+//						$(".menu-cart-all").html(result);
+//						refreshSwiper();
+//						$(".menu-cart-all").fadeIn("slow");
+//					}
+//				}
+//			});
+//		
+//			$(".menu-cart-all.swiper-container").addClass("swiper-container-vertical");
+//	
+//	}).mouseleave(function() {
+//			$(".menu-cart-all").mouseover(function() {
+//				isflag = false;
+//			}).mouseleave(function() {
+//				isflag = false;
+//				$(".menu-cart-all").fadeOut("normal");
+//			});
+//			setTimeout(function() {
+//				if (isflag) {
+//					isflag = false;
+//					$(".menu-cart-all").fadeOut("normal");
+//				}
+//			}, 400);
+//	});
+//	
+//}
+
+
+/**
+ * 每次onload之后，刷新购物车数量
+ */
+function refreshCart(){
+	var url = loxia.encodeUrl(_contextPath + '/shopping/cart/count.json');
+	loxia.asyncXhrPost(url, {
+		"skuId" : '',
+		"count" : ''
+	}, {
+		successHandler : function(result, textStatus) {
+			if (textStatus) {
+				if(result.description > 0){
+					$(".menu-car.inline-block").css("width","106px");
+					$(".span-car.nav-font-family").text("购物车 "+result.description);
+				}else{
+					$(".menu-car.inline-block").css("width","86px");
+					$(".span-car.nav-font-family").text("购物车 ");
+				}
+			}
+		}
+	});
+}
+
+function refreshRecommand(fn){
+
+	if($(".conbox_rig .you_like").length > 0){
+		refreshRecommand_pdp(fn);
+		if($(".pad-guesslike").length > 0){
+			refreshRecommand_pdp_pad(fn);
+		}
+	}
+	/*if($(".recommended-homepage-content").length > 0){
+		overallRecommand("overall","10",fn, "homepage", ".recommended-homepage-content");
+	}
+	if($(".recommended-arsenal-content").length > 0){
+		overallRecommand("arsenal","10", fn, "arsenal", ".recommended-arsenal-content");
+	}
+	 if($(".recommended-football-content").length > 0){
+		overallRecommand("football","10", fn, "football", ".recommended-football-content");
+	}
+	 if($(".recommended-running-content").length > 0){
+		overallRecommand("runningshoes","10", fn, "running", ".recommended-running-content");
+	}
+	 if($(".recommended-training-content").length > 0){
+		overallRecommand("overall","10", fn,"training",".recommended-training-content");
+	}
+	 if($(".recommended-ferrari-content").length > 0){
+		overallRecommand("ferrari","10",fn,"ferrari",".recommended-ferrari-content");
+	}
+	 if($(".recommended-men-content").length > 0){
+		overallRecommand("men","10",fn,"men",".recommended-men-content");
+	}
+	 if($(".recommended-women-content").length > 0){
+		overallRecommand("women","10",fn,"women",".recommended-women-content");
+	}
+	 if($(".recommended-bolt-content").length > 0){
+		overallRecommand("bolt","10",fn,"bolt",".recommended-bolt-content");
+	}
+	 if($(".recommended-luhan-content").length > 0){
+		overallRecommand("luhan","10",fn,"luhan",".recommended-luhan-content");
+	}
+	 if($(".recommended-italia-content").length > 0){
+		overallRecommand("italia","10",fn,"italia",".recommended-italia-content");
+	}
+	 if($(".recommended-bvb-content").length > 0){
+		overallRecommand("bvb","10",fn,"bvb",".recommended-bvb-content");
+	}
+	 if($(".recommended-sergio-aguero-content").length > 0){
+		overallRecommand("sergio-aguero","10",fn,"sergio-aguero",".recommended-sergio-aguero-content");
+	}
+	 if($(".recommended-cesc-fabregas-content").length > 0){
+		("cesc-fabregas","10",fn,"cesc-fabregas",".recommended-cesc-fabregas-content");
+	}
+	 if($(".recommended-marco-reus-content").length > 0){
+		overallRecommand("marco-reus","10",fn,"marco-reus",".recommended-marco-reus-content");
+	}
+	 if($(".recommended-mario-balotelli-content").length > 0){
+		overallRecommand("mario-balotelli","10",fn,"mario-balotelli",".recommended-mario-balotelli-content");
+	}
+	 if($(".recommended-golf-content").length > 0){
+		overallRecommand("golf","10",fn,"golf",".recommended-golf-content");
+	}
+	 if($(".recommended-rickie-fowler-content").length > 0){
+		overallRecommand("rickie-fowler","10",fn,"rickie-fowler",".recommended-rickie-fowler-content");
+	}
+	 if($(".recommended-liuwen-content").length > 0){
+		overallRecommand("liuwen","10",fn,"liuwen",".recommended-liuwen-content");
+	}
+	 if($(".recommended-soccer-football-content").length > 0){
+		overallRecommand("soccer-football","10",fn,"soccer-football",".recommended-soccer-football-content");
+	}
+	
+	 if($(".recommended-blaze-content").length > 0){
+		overallRecommand("blaze","10",fn,"blaze",".recommended-blaze-content");		
+	}
+	 if($(".recommended-runningRecommend-content").length > 0){
+		overallRecommand("running","10",fn, "runningRecommend", ".recommended-runningRecommend-content");
+	}*/
+	 if($(".conbox_rig.clearbor .you_like").length > 0){
+		refreshRecommand_pdp(fn);
+	}
+	//同一个页面有两个推荐
+	/*if($(".recommended-soccer-tricks-content").length > 0){
+		overallRecommand("soccer-tricks","10",fn,"soccer-tricks",".recommended-soccer-tricks-content");
+	}*/
+	//新增 多余
+	/* if($(".recommended-football_lp_hot1-content").length > 0){
+			overallRecommand("football_lp_hot1","10",fn,"football_lp_hot1",".recommended-football_lp_hot1-content");
+		}
+	 if($(".recommended-football_lp_hot2-content").length > 0){
+			overallRecommand("football_lp_hot2","10",fn,"football_lp_hot2",".recommended-football_lp_hot2-content");
+		}
+	 if($(".recommended-football_lp_hot3-content").length > 0){
+			overallRecommand("football_lp_hot3","10",fn,"football_lp_hot3",".recommended-football_lp_hot3-content");
+		}
+	 if($(".recommended-football_lp_hot4-content").length > 0){
+			overallRecommand("football_lp_hot4","10",fn,"football_lp_hot4",".recommended-football_lp_hot4-content");
+		}
+	 if($(".recommended-football_lp_hot5-content").length > 0){
+			overallRecommand("football_lp_hot5","10",fn,"football_lp_hot5",".recommended-football_lp_hot5-content");
+		}
+	 if($(".recommended-football_lp_hot6-content").length > 0){
+			overallRecommand("football_lp_hot6","10",fn,"football_lp_hot6",".recommended-football_lp_hot6-content");
+		}
+	 if($(".recommended-football_lp_hot7-content").length > 0){
+			overallRecommand("football_lp_hot7","10",fn,"football_lp_hot7",".recommended-football_lp_hot7-content");
+		}
+	 if($(".recommended-football_lp_hot8-content").length > 0){
+			overallRecommand("football_lp_hot8","10",fn,"football_lp_hot8",".recommended-football_lp_hot8-content");
+		}
+	 if($(".recommended-football_lp_hot9-content").length > 0){
+			overallRecommand("football_lp_hot9","10",fn,"football_lp_hot9",".recommended-football_lp_hot9-content");
+		}
+	 if($(".recommended-football_lp_hot10-content").length > 0){
+			overallRecommand("football_lp_hot10","10",fn,"football_lp_hot10",".recommended-football_lp_hot10-content");
+		}*/
+	if($(".recommended-content").length > 0){
+		var length = $(".recommended-content").length;
+		for (var i=0;i<=length-1;i++) {
+			var recommendedinfo = "";
+			if ($(".recommended-content").eq(i).attr("class").indexOf("mg-00")!=-1) {
+				recommendedinfo = $(".recommended-content").eq(i).attr("class").substring(32).replace("-content mg-00","");	
+			} else {
+				recommendedinfo = $(".recommended-content").eq(i).attr("class").substring(32).replace("-content","");	
+			}				 
+			overallRecommand(""+recommendedinfo+"","10",fn,""+recommendedinfo+"",".recommended-"+recommendedinfo+"-content");
+		 }
+	}
+	
+}
+
+/**
+ * recommandItem商品推荐PDP页面
+ */ 
+
+
+
+function refreshRecommand_pdp(fn,obj){
+	//搜索页
+	var urlSearch = window.location.search;
+	var keyword = "";
+	var filterSearch = urlSearch.split("&");
+	$.map(filterSearch, function(obj) {
+		var objMap = obj.split("=");
+		if (2 == objMap.length) {
+			objMap[0] = objMap[0].replace("?", "");
+			if (objMap[0]=="keyword" ) {
+				keyword = objMap[1];
+			}
+		}
+	});
+	//PDP
+	var _obj;
+	var pdp_obj = $(".grouping.clearfix .cur.curmb:last");
+	var pdp_pathname = pdp_obj.find("a").attr("href");
+	
+	//PLP
+	var pathname = window.location.pathname;
+	var plp_obj = $(".list-inline .cur.curmb:last");
+	
+	if(typeof(pdp_pathname) != "undefined"){
+		pathname = pdp_pathname;
+		_obj = pdp_obj;
+	}else {
+		_obj = plp_obj;
+	}
+	
+	if (obj != undefined) {
+		pathname = obj.find("a").attr("href");
+		_obj = obj;
+	}
+	
+	var pathnames = pathname.split('/');
+	var categoryArray = "";
+	$(pathnames).each(function(i){
+		categoryArray = categoryArray + pathnames[i] + ",";
+	});
+	categoryArray = categoryArray.substring(0, categoryArray.length-1);
+	
+	var url = loxia.encodeUrl(_contextPath + '/pdp_recommand/findRecommandItem.json');
+	if (keyword != "") {
+		
+		loxia.asyncXhrPost(url, {
+			"param" : categoryArray,
+			"count" : '8',
+			"keyword" : keyword
+		}, {
+			successHandler : function(result, textStatus) {
+				if (textStatus) {
+					$(".conbox_rig .you_like").html(result);
+				}
+			}
+		});
+	} else {
+		loxia.asyncXhrPost(url, {
+			"param" : categoryArray,
+			"count" : '8',
+			"keyword" : keyword
+		}, {
+			successHandler : function(result, textStatus) {
+				if (textStatus) {
+					$(".conbox_rig .you_like").html(result);
+					if ($(".conbox-recommend .swiper-slide").length < 8 
+							&& !pathname.endsWith("featured") 
+							&& !pathname.endsWith("ftw")
+							&& !pathname.endsWith("app")
+							&& !pathname.endsWith("acc")
+							&& !pathname.endsWith("sport")
+							&& !pathname.endsWith("select")
+							&& !pathname.endsWith("sales")
+							&& !pathname.endsWith("featured/") 
+							&& !pathname.endsWith("ftw/")
+							&& !pathname.endsWith("app/")
+							&& !pathname.endsWith("acc/")
+							&& !pathname.endsWith("sport/")
+							&& !pathname.endsWith("select/")
+							&& !pathname.endsWith("sales/")) {
+						$(".conbox_rig .you_like").empty();
+						var prev_obj;
+						if (_obj != undefined) {							
+							prev_obj = _obj.prev().prev();
+						} 
+						//递归调用
+						refreshRecommand_pdp(fn,prev_obj);
+					}
+				}
+			}
+		});
+	}
+	fn();
+}
+/*function refreshRecommand_pdp(fn){
+	var url = loxia.encodeUrl(_contextPath + '/pdp_recommand/findRecommandItem.json');
+	loxia.asyncXhrPost(url, {
+		"param" : 'overall',
+		"count" : '3'
+	}, {
+		successHandler : function(result, textStatus) {
+			if (textStatus) {
+				$(".conbox_rig .you_like").html(result);
+			}
+		}
+	});
+	fn();
+}*/
+
+/**
+ * recommandItem商品推荐PDP_PAD页面
+ */
+function refreshRecommand_pdp_pad(fn,obj){
+	//PDP
+	var _obj;
+	var pdp_obj = $(".grouping.clearfix .cur.curmb:last");
+	var pdp_pathname = pdp_obj.find("a").attr("href");
+	
+	//PLP
+	var pathname = window.location.pathname;
+	var plp_obj = $(".list-inline .cur.curmb:last");
+	
+	if(typeof(pdp_pathname) != "undefined"){
+		pathname = pdp_pathname;
+		_obj = pdp_obj;
+	}else{
+		_obj = plp_obj;
+	}
+	
+	if (obj != undefined) {
+		pathname = obj.find("a").attr("href");
+		_obj = obj;
+	}
+	
+	var pathnames = pathname.split('/');
+	var categoryArray = "";
+	$(pathnames).each(function(i){
+		categoryArray = categoryArray + pathnames[i] + ",";
+	});
+	categoryArray = categoryArray.substring(0, categoryArray.length-1);
+	
+	var url = loxia.encodeUrl(_contextPath + '/pdp_recommand_pad/findRecommandItem.json');
+	loxia.asyncXhrPost(url, {
+		"param" : categoryArray,
+		"count" : '8',
+	}, {
+		successHandler : function(result, textStatus) {
+			if (textStatus) {
+				$(".pad-guesslike").html(result);
+				if ($(".pad-guesslike .swiper-slide").length < 8
+						&& !pathname.endsWith("featured") 
+						&& !pathname.endsWith("ftw")
+						&& !pathname.endsWith("app")
+						&& !pathname.endsWith("acc")
+						&& !pathname.endsWith("sport")
+						&& !pathname.endsWith("select")
+						&& !pathname.endsWith("sales")
+						&& !pathname.endsWith("featured/") 
+						&& !pathname.endsWith("ftw/")
+						&& !pathname.endsWith("app/")
+						&& !pathname.endsWith("acc/")
+						&& !pathname.endsWith("sport/")
+						&& !pathname.endsWith("select/")
+						&& !pathname.endsWith("sales/")) {
+					$(".pad-guesslike").empty();
+					var prev_obj;
+					if (_obj != undefined) {							
+						prev_obj = _obj.prev().prev();
+					} 
+					//递归调用
+					refreshRecommand_pdp_pad(fn,prev_obj);
+				}
+				fn();
+			}
+		}
+	});
+}
+
+/**
+ * 首页recommandItem商品推荐
+ */
+function overallRecommand(param, count, fn, pageName, divClass){
+	var url = loxia.encodeUrl(_contextPath + '/recommand/findRecommandItem.json');
+	loxia.asyncXhrPost(url, {
+		"param" : param,
+		"count" : count,
+		"pageName" : pageName
+	}, {
+		successHandler : function(result, textStatus) {
+			if (textStatus) {
+				$(divClass).append(result);
+				/*if(window.location.href.indexOf("collections/iconic") != -1){
+					//$(".new-section").addClass("margin-bottom-40");
+					$(".contnav-tit").text("明星同款");
+				}*/
+				fn();
+			}
+		}
+	});
+}
+
+//自动登录
+function autoLogin(){
+		var ajaxautologinurl = loxia.encodeUrl(_contextPath + '/member/asynautologin');
+		loxia.asyncXhrGet(ajaxautologinurl, null, {
+			
+			successHandler : function(data,textStatus){
+				$(".menu-cart-all").html(data);
+				if ( null!=$("#sessionLoginName").val() && 0<$("#sessionLoginName").val().length ) {
+					 //$("#userName").html($("#sessionLoginName").val());
+					 $("#p1").html('<a href="'+_contextPath+'/account/profile" id="userName">'+$("#sessionLoginName").val()+'</a>');
+					 $("#p2").html('<a href="javascript:void(0)" onclick="loginOut()">注销</a>');
+				}else{
+					 $("#p1").html('<a href="/shopping/member/login">登录</a>'); 
+					 $("#p2").html('<li><a href="/shopping/member/regist">注册</a></li>');
+				}
+				if( 0 < $("#shoppingCartCount").val().length && 0 != $("#shoppingCartCount").val() && "0" != $("#shoppingCartCount").val()){
+					$(".span-car.nav-font-family").text("购物车 " + $("#shoppingCartCount").val());
+					$(".menu-car.inline-block").css("width", "106px");
+				}
+			}
+		});	
+		
+}
+
+
+function getUserName(){
+	var url = window.location.href;
+	if(url.indexOf("/shopping/member/login") != -1 || url.indexOf("/shopping/member/regist") != -1){	
+		return 
+	}else{
+		//判断是否为自动登录
+		var autoload = getCookiesValue('autoload');
+		if(autoload != '1'){
+			 var username = getBase64CookiesValue('l_u_n');
+			 if (isNotNullOrEmpty(username)) {
+				 $("#p1").html('<a href="'+_contextPath+'/account/profile" id="userName">'+username+'</a>');
+				 $("#p2").html('<a href="javascript:void(0)" onclick="loginOut()">注销</a>');
+			 }else{
+				 $("#p1").html('<a href="/shopping/member/login">登录</a>'); 
+				 $("#p2").html('<li><a href="/shopping/member/regist">注册</a></li>');
+			 }
+		}
+	}
+}
+
+
+function getBase64CookiesValue(name){
+	var arr = document.cookie.split(";");
+	for(var i=0; i<arr.length; i++){
+		 var temp = arr[i].split("=");
+		 if($.trim(temp[0]) == name){
+			 //alert(temp[1]); 
+			 var base64 = new Base64();
+			 return base64.decode(UrlDecode(temp[1]));
+		 }
+	}
+}
+
+
+function getCookiesValue(name){
+	var arr = document.cookie.split(";");
+	for(var i=0; i<arr.length; i++){
+		 var temp = arr[i].split("=");
+		 if($.trim(temp[0]) == name){
+			 //alert(temp[1]);
+			 return temp[1];
+		 }
+	}
+}
+
+
+function str2asc(str){
+    return str.charCodeAt(0).toString(16);
+}
+
+
+function asc2str(str){
+    return String.fromCharCode(str);
+}
+
+//UrlEncode函数
+function UrlEncode(str){
+	var ret="";
+	var strSpecial="!\"#$%&'()*+,/:;<=>?[]^`{|}~%";
+	for(var i=0;i<str.length;i++){
+		var chr = str.charAt(i);
+		var c=str2asc(chr);
+		tt += chr+":"+c+"n";
+		if(parseInt("0x"+c) > 0x7f){
+			ret+="%"+c.slice(0,2)+"%"+c.slice(-2);
+		}else{
+			if(chr==" ")
+				ret+="+";
+			else if(strSpecial.indexOf(chr)!=-1)
+				ret+="%"+c.toString(16);
+			else
+				ret+=chr;
+		}
+	}
+	return ret;
+}
+//UrlDecode函数：
+function UrlDecode(str){
+	var ret="";
+	for(var i=0;i<str.length;i++){
+		var chr = str.charAt(i);
+		if(chr == "+"){
+			ret+=" ";
+		}else if(chr=="%"){
+			var asc = str.substring(i+1,i+3);
+			if(parseInt("0x"+asc)>0x7f){
+				ret+=asc2str(parseInt("0x"+asc+str.substring(i+4,i+6)));
+				i+=5;
+			}else{
+				ret+=asc2str(parseInt("0x"+asc));
+				i+=2;
+			}
+		}else{
+			ret+= chr;
+		}
+	}
+	return ret;
+}
+
+function loginOut() {
+	// 提交表单
+	var logoutUrl = loxia.encodeUrl(_contextPath + '/member/logout');
+	loxia.asyncXhrGet(logoutUrl, null, {
+		successHandler : function(data, textStatus) {
+			if (textStatus) {
+			var result = eval(data);
+				if (result.isSuccess) {
+					window.location.href = result.returnUrl;
+				}
+			}
+		}
+	});
+}
+
+
+//function navigationCompose(){
+//	$(".nav-cont-images").has('img').each(function(){
+//		$(this).attr('class', 'lever2 nav-cont-images nav-cont-2 clearfix');
+//		$(this).parents('.nav-expand').attr('class', 'nav-expand nav-image mg-left-option');
+//		$(this).parents('.nav-wrap').attr('class', 'nav-wrap clearfix');
+//		
+//	});
+//}
+
+//老版导航的自适应
+/*function navigationCompose(){
+	$(".nav-wrap").has('img').each(function(index){
+		var ul = $(this).find('ul');
+		for(var i=0; i<ul.length; i++){
+			
+			if((i+1)%2 == 1){
+				$(ul[i]).attr('class', 'lever2 nav-cont-images nav-cont-'+(i+1)+' clearfix');
+			}
+			if(i==0 && index==0){
+				$(ul[i]).attr('class', 'lever2 nav-cont-images nav-cont-1 clearfix wit238');
+			}
+			if(i ==1){
+				$(ul[i]).attr('class', 'lever2 nav-cont-images clearfix wit238');
+			}
+			if(i==2){
+				$(ul[i]).attr('class', 'lever2 nav-cont-images clearfix wit500');
+			}
+			if(i==0 && index==2){
+				$(ul[i]).attr('class', 'lever2 nav-cont-images nav-cont-1 clearfix wit600');
+			}
+		}
+		$(this).parents('.nav-expand').attr('class', 'nav-expand nav-image mg-left-option');
+		$(this).attr('class', 'nav-wrap clearfix');	
+	});
+	
+	if($(".nav-primary").length >= 3){
+		$($(".nav-primary")[0]).attr('name', 'men_menu');
+		$($(".nav-primary")[1]).attr('name', 'women_menu');
+		$($(".nav-primary")[2]).attr('name', 'kids_menu');
+	};
+	
+	$(".nav-primary").each(function(){
+		if(window.location.pathname == $(this).attr('href')){
+			$(this).addClass('red');
+		}
+	});
+	//自适应样式
+	var wit600 =$(".lever2.nav-cont-images.wit600");
+	for(var i=0;i<wit600.length;i++){
+		var liArr = $(wit600[i]).find("li").not( $(".text-none-conter"));
+		for(var j=0;j<liArr.length;j++){
+			if(j>3){
+				$(liArr[j]).attr('class', 'navli-tit tit-none');
+			}
+		}
+	}
+	//自适应样式
+	var wit500 =$(".lever2.nav-cont-images.wit500");
+	for(var i=0;i<wit500.length;i++){
+		var liArr = $(wit500[i]).find("li").not( $(".text-none-conter"));
+		for(var j=0;j<liArr.length;j++){
+			if(j>3){
+				$(liArr[j]).attr('class', 'navli-tit tit-none');
+			}
+		}
+	}
+}*/
+
+

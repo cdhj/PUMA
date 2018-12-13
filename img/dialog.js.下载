@@ -1,0 +1,152 @@
+//pdp到货通知弹出层
+var pdp_dhtz_customDialog;
+//弹出层对象
+var email_customDialog;
+//PDP尺码表
+var customSizeDialog;
+//PDP新商品尺码表
+var newCustomSizeDialog;
+$(document).ready(function() {
+	//初始化提示框
+	initDialog();
+	
+	 //header点击触发事件(订阅电子邮件弹层) 
+	$('.header .slot-menu-1').on('click', 'a', function(e){
+		e.preventDefault();
+		$("#subscribe_email_dialog input").val("");
+		$("#subscribe_email_dialog span.help-block").text("");
+		$("#subscribe_email_dialog div.form-group").removeClass("has-error");
+		$("#subscribe_email_dialog i.isChooseRuleMail").removeClass("check-selected");
+		email_customDialog.show();
+	});
+	//footer订阅电子邮件弹层
+	$('body .footer').on('click', '.inp-search-icon', function(){
+		var emailAddress =  $('.footer .inp-search.nav-font-family').val();
+		$("#subscribe_email_dialog input").val(emailAddress);
+		
+		$("#subscribe_email_dialog span.help-block").text("");
+		$("#subscribe_email_dialog div.form-group").removeClass("has-error");
+		$("#subscribe_email_dialog i.isChooseRuleMail").removeClass("check-selected");
+		email_customDialog.show();
+	});
+	
+	$('.spice-black-opacity').on('click', function(){
+		email_customDialog.hide();
+	});
+	/** 
+	 *10.22号 法务新需求 在页面上添加 “我已阅读PUMA中国官方商城的《隐私条款》和《退货条例》” 选项
+	 * 如果不勾选 弹出对话框提示 并且不能购买商品
+	 * */
+	$(".isChooseRuleMail").live("click",function(){
+		if($(this).hasClass('check-selected')){
+			$(this).removeClass('check-selected');
+		}else{
+			$(this).addClass('check-selected');
+		}
+	});
+});
+
+
+function initDialog(){
+//	订阅邮件提示框
+	email_customDialog = spice.dialog({
+    template: $('#email-dialog').html(),
+    btnCloseClass: '.dialog-close', 
+    btnSuccessClass: '.btn', 
+    submit: function(){
+//		点击确认之后需要做的事情
+    	var emailAddress = $(this).find("input").val();
+    	if(!isValueEmpty(emailAddress)){
+    		if(!$(this).find('.isChooseRuleMail').hasClass('check-selected')){
+    			$("#subscribe_email_dialog div.form-group").addClass("has-error");
+	    		$("#subscribe_email_dialog span.help-block").text("请先勾选相关隐私政策和使用条款");
+    			return false;
+			}
+    		if(checkDialogEmail(emailAddress)){
+    			var url = loxia.encodeUrl(_contextPath + '/help/findPpSubEmailList.json');
+    			loxia.asyncXhrPost(url, {"emailAddress" :emailAddress,"type" :"0"}, {
+    				successHandler : function(result, textStatus) {
+    					if (textStatus) {
+    						if(0 == result.description){
+//	    						$("#subscribe_email_dialog span.help-block").text("数据添加成功....");
+    							email_customDialog.hide();
+    							
+    							/***订阅成提示 **/
+    							var emailok_customDialog = spice.dialog({
+    							    template: $('#emailok-dialog').html(),
+    							    btnCloseClass: '.dialog-close', 
+    							    btnSuccessClass: '.btn', 
+    							    submit: function(){}
+    							});
+    							emailok_customDialog.show();
+    						}else if(1 == result.description){
+    							$("#subscribe_email_dialog div.form-group").addClass("has-error");
+    							$("#subscribe_email_dialog span.help-block").text("该邮箱已订阅....");
+    						}else if(2 == result.description){
+    							$("#subscribe_email_dialog div.form-group").addClass("has-error");
+    							$("#subscribe_email_dialog span.help-block").text("您今日已取消订阅过多，今日不能再订阅...");
+    						}
+    					}
+    				}
+    			});
+    		}else{
+    			$("#subscribe_email_dialog div.form-group").addClass("has-error");
+    			$("#subscribe_email_dialog span.help-block").text("邮 箱 无 效！！");
+    			return false;
+    		}
+    	}else{
+    		$("#subscribe_email_dialog div.form-group").addClass("has-error");
+    		$("#subscribe_email_dialog span.help-block").text("邮 箱 不能为空！！");
+			return false;
+    	}
+    	
+    	
+    }
+});	
+	
+		
+	//查看尺码表/加载尺码表的弹层
+	customSizeDialog = spice.dialog({
+	    template: $('#size-dialog').html(),
+	    dialogClass: 'asize-dialog',
+	    btnCloseClass: '.dialog-close', 
+	    btnSuccessClass: '.btn', 
+	    submit: function(){
+	        //点击确认之后需要做的事情
+	    	customSizeDialog.hide();
+	    }
+	}); 
+	
+	//查看尺码表/加载新商品尺码表的弹层
+	newCustomSizeDialog = spice.dialog({
+	    template: $('#newsize-dialog').html(),
+	    dialogClass: 'asize-dialog',
+	    btnCloseClass: '.dialog-close', 
+	    btnSuccessClass: '.btn', 
+	    submit: function(){
+	        //点击确认之后需要做的事情
+	    	newCustomSizeDialog.hide();
+	    }
+	}); 
+
+
+}
+
+/**
+ * 判断值是否为空
+ * 
+ * @param selector
+ * @returns {Boolean}
+ */
+function isValueEmpty(value){
+	if(value == ""|| value == null|| value == undefined){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function checkDialogEmail(email) {
+	var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+	return emailPattern.test(email);
+}

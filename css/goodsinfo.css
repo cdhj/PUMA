@@ -1,0 +1,423 @@
+.goodsinfo{
+	width: 100%;
+}
+.infoDiv{
+	width: 1080px;
+	margin:0 auto;
+	padding:50px 0;
+	overflow: hidden;
+}
+.smallTitle{
+	color:#393938;
+}
+.smallTitle a{
+	font-size: 12px;
+	color:#393938;
+}
+.smallTitle span:last-child a{
+	color:red;
+}
+/*.infoImg{
+	overflow: hidden;
+}*/
+.goodImg{
+	float: left;
+	width:45%;	
+}
+.big{
+	width: 100%;
+	height: 1px;
+	background: #ccc;
+}
+.goodImg img{
+	display: block;
+	width: 100%;
+}
+.goodlist{
+	width: 100%;
+}
+.swiper-container {
+	width: 100%;
+	height: 100%;
+}
+.swiper-slide {
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+
+	/* Center slide text vertically */
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+.swiper-slide img{
+	width: 80px;
+	height: 80px;
+	display: block;
+}
+.fangda{
+	position:relative;
+}
+.mirror{
+	width: 100px;
+	height: 120px;	
+	position:absolute;
+	border:1px solid #ccc;
+	top:10px;
+	left:10px;
+	box-shadow: 2px 2px 5px #ccc,-2px -2px 5px #ccc;
+	display: none;
+}
+.bigImg{
+	border:1px solid #eee;
+	background-color:white;
+	overflow: hidden;
+	width: 90%;
+	height: 100%;
+	position: absolute;
+	top:0;
+	right:-95%;
+	background-image: url(../img/370682010_1_2000X2000.png);
+	background-repeat: no-repeat;
+	background-size: 100%; 
+	display: none;
+	z-index: 10;
+}
+.good{
+	float: left;
+	width: 30%;
+	margin-left: 50px;
+	padding-bottom: 20px;
+}
+.goodheader h3{
+	font-size:32px;
+	color:#333;	
+}
+.goodheader h4{
+	font-size:28px;
+	color:#333;	
+	font-weight: 100;
+}
+.goodheader h6{
+	color:#666;	
+	font-weight: 100;
+}
+.changeImg{
+	margin-top: 20px;
+}
+.changeImg img{
+	width: 38px;
+	height: 38px;
+	/*border:3px solid red;*/
+}
+.changeImg p{
+	margin-top: 10px;
+	font-size: 12px;
+}
+.size{
+	margin-top: 20px;
+	overflow: hidden;
+}
+.size span:first-child{
+	font-size: 14px;
+	float: left;
+}
+.size span:nth-child(2){
+	font-size: 12px;
+	color:red;
+	float: right;
+}
+.size a{
+	clear: both;
+	display: inline-block;
+	padding:8px;
+	background: #eee;
+	color:black;
+	margin:8px;
+	font-size: 13px;
+}
+.count>span{
+	font-size: 14px;
+}
+.chooseCount{
+	position: relative;
+	margin-top: 10px;
+}
+.btn{
+	width: 200px;
+	height: 30px;
+}
+.btn span:first-child{
+	text-indent: 10px;
+	line-height: 30px;
+	float: left;
+	width:90px;
+	height: 30px;
+	background: #eee;
+}
+.btn span:nth-child(2){
+	float: left;
+	width: 30px;
+	height: 30px;
+	background: red;
+	position: relative;
+}
+.btn span:nth-child(3){
+	float: left;
+	margin:0 5px;
+	padding-top: 5px;
+}
+.btn span:nth-child(4){
+	padding-top: 5px;
+	float: left;
+	font-size: 14px;
+}
+.arrow div{
+	width: 0;
+	height: 0;
+	border:5px solid transparent;
+	border-top-color:white;
+	position: absolute;
+	top:10px;
+	left:10px;
+}
+
+.shuliang{
+	z-index: 5;
+	background: white;
+	position: absolute;
+	box-sizing: border-box;
+	width: 120px;
+	border:1px solid #ccc;
+	display: none;
+}
+.shuliang li{
+	line-height: 25px;
+	text-indent: 10px;
+	background: #eee;
+	width: 120px;
+	border-bottom: 1px solid white;
+	font-size: 12px;
+}
+.addcar{
+	margin-top: 30px;
+	position:relative;
+	width: 180px;
+	height: 40px;
+	line-height:40px;
+	background: red;	
+}
+.addcar>div{
+	font-size: 14px;
+	color:white;
+	padding-left: 50px; 
+}
+
+.arrow2 div{
+	width: 0;
+	height: 0;
+	border:3px solid transparent;
+	border-top-color:white;
+	border-right-color:white;
+	position: absolute;
+	top:2px;
+	right:2px;
+}
+.share{
+	margin:50px 0;
+}
+.share span{
+	font-size: 14px;
+}
+.share img{
+	vertical-align: middle;x; 
+}
+.moreLike{
+	float: right;
+	width: 15%;
+	border-left: 1px solid #ccc;
+}
+.like{
+	height: 50px;
+	position:relative;
+}
+.likeest h3{
+	background: #999 !important;
+}
+.like h3{
+	width: 100px;
+	height: 40px;
+	margin:0 auto;
+	line-height: 40px;
+	text-align: center;
+	background: #999;
+	color:white;
+	font-size: 14px;
+	font-weight: 100;	
+}
+.like .arrow{
+	position: absolute;
+	left:50%;
+	top:40px;
+	margin-left: -5px;
+	width: 0;
+	height: 0;
+	border:10px solid transparent;
+	border-top-color:#999;
+}
+.lunbo{
+	width:100%;
+	position: relative;
+}
+.hottDiv{
+	width:100%;
+	height: 550px;
+	overflow: hidden;
+}
+.hotDiv{
+	height: 1480px;
+	margin:0 auto;
+	position: relative;
+	overflow: hidden;
+	top: 0;
+}
+.goods{
+	height: 160px;
+	width: 70%;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 25px;
+}
+.goods a{
+	font-size: 12px;
+	color:#8e8e8e;
+}
+.goods span{
+	font-size: 12px;
+	color:#8e8e8e;
+}
+.goods img{
+	display: block;
+	width: 80px;
+	height: 80px;
+	margin:0 auto;
+}
+.lunbo .icon-jiantouxiangshang{
+	position: absolute;
+	left:50%;
+	margin-left: -10px;
+	top:0;
+	font-size: 20px;
+	color:gray;
+}
+.lunbo .icon-jiantouxiangxia{
+	position: absolute;
+	left:50%;
+	margin-left: -10px;
+	bottom:0;
+	color:gray;
+	font-size: 20px;
+}
+.detial{
+	width: 100%;
+	overflow: hidden;
+}
+.detial .like h3{
+	width: 150px;
+}
+.detial .like:nth-child(3) h3{
+	background: black;
+}
+.detial .like:nth-child(4) h3{
+	background: black;
+}
+.detial>div{
+	float:left;
+	margin:0 15px;
+}
+.detial p{
+	padding-top: 20px;
+	clear: both;
+	font-size: 14px;
+}
+
+
+.gouwu{
+	font-size: 12px;
+	color:red;
+	font-weight: 600;
+}
+.car{
+	display: none;
+	position: absolute;
+	right:20px;
+	top:51px;
+	background: #fff;
+	z-index: 11;
+	padding:20px;
+	border:1px solid #ccc;
+}
+.smallcar{
+	clear: both;
+	border-bottom: 1px dashed #ccc;
+	overflow: hidden;
+}
+.smallcar div{
+	float: left
+}
+.smallcar div:nth-child(2) p{
+	font-size: 14px;
+	color:#333;
+	margin:5px 0;
+	font-weight: 600;
+}
+.smallcar div:nth-child(2) span{
+	font-weight: 100;
+}
+.car h4{
+	clear: both;
+	border-top:1px dashed #333;
+	line-height: 80px;
+	text-align: center;
+	font-size: 20px;
+	color:#333;
+}
+.gocar{
+	position:relative;
+	width: 180px;
+	height: 40px;
+	line-height:40px;
+	background: red;
+	display: inline-block;	
+}
+.gocar>div{
+	font-size: 14px;
+	color:white;
+	padding-left: 50px; 
+}
+
+.arrow2 div{
+	width: 0;
+	height: 0;
+	border:3px solid transparent;
+	border-top-color:white;
+	border-right-color:white;
+	position: absolute;
+	top:2px;
+	right:2px;
+}
+.car a{
+	margin-left: 10px;
+	color:#333;
+	font-size: 14px;
+	text-decoration: underline;
+}

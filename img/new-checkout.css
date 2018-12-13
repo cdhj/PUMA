@@ -1,0 +1,446 @@
+@charset "UTF-8";
+/*支付流程，弹层*/
+.checkout-ok {
+	
+}
+
+.checkout-no {
+	background: none;
+	color: #000;
+}
+
+.checkout-no:hover {
+	background: none;
+}
+
+/*标题下划线*/
+.cgjz_tit {
+	font-size: 40px;
+	letter-spacing: 8px;
+	font-family: "geogtq-sb", "FZdaheiJT", "黑体", Arial, Helvetica,
+		sans-serif;
+	border-bottom: 3px solid #333;
+	margin-bottom: 40px;
+}
+
+.cgjz_text span {
+	font-family: 'geogtq-md', "微软雅黑", "黑体", "宋体", Arial, Helvetica,
+		sans-serif;
+}
+
+/*猜你喜欢*/
+.settle-accounts .check-order-rec {
+	position: relative;
+	top: -460px;
+}
+
+/*订单明细*/
+.checkorder-bottom {
+	margin-bottom: 20px;
+}
+
+.cgjz_text_s {
+	font-size: 14px;
+}
+
+/*结账页面-支付方式（s-new-checkout.html）*/
+.Payment-method .PaymentMethod li {
+	width: calc(25% -  20px);
+	margin-right: 20px;
+}
+
+@media only screen and (max-width: 1214px) {
+	.Payment-method ul li {
+		width: 45%;
+	}
+	.alipay-bank-all ul li a.bank-pf {
+		background-position: -12px -108px;
+	}
+	.alipay-bank-all ul li a.bank-jt {
+		background-position: -12px -252px;
+	}
+	.alipay-bank-all ul li a.bank-xy {
+		background-position: -12px -360px;
+	}
+}
+
+/*支付失败页面，倒计时*/
+.djs_sx {
+	color: red;
+}
+
+/*去掉弹层的x*/
+.checkoutDialog .dialog-close {
+	display: none;
+}
+
+.error-tis {
+	display: none;
+	color: #f00;
+}
+
+.p_r_10 {
+	padding-right: 10px;
+}
+
+.f_l {
+	float: left;
+}
+
+/***********************2016-04-25***********************/
+
+/*留言*/
+.form-liuyanbox {
+	padding: 0;
+}
+
+.liuyan-box {
+	display: none;
+	margin: 0;
+}
+
+.drop-select-wrap .liuyan {
+	width: 100%;
+	resize: none;
+	height: auto;
+	padding: 20px;
+}
+
+.form-liuyanbox .float_r {
+	display: none;
+	float: right;
+}
+
+/*历史订单*/
+.checkorder-remarks {
+	
+}
+
+.checkorder-remarks .checkorder-label {
+	font-family: 'geogtq-md', "微软雅黑", "黑体", "宋体", Arial, Helvetica,
+		sans-serif;
+	font-size: 12px;
+	color: #333;
+	font-weight: bold;
+}
+
+.checkorder-remarks .checkorder-value {
+	font-size: 12px;
+	color: #999;
+}
+
+/*	20160612 退货	*/
+	.refunds-btn{
+		display: none;
+		margin-top: 60px;
+		width: 80px;
+		padding: 0;
+	}
+	.refunds-end-btn{
+		text-decoration: underline;
+	}
+	.refunds-end-btn:hover{
+		text-decoration: underline;
+	}
+	.current .refunds-btn{
+		display: block;
+	}
+
+
+
+	.return-default-box{
+
+	}
+
+	.return-default-box .tit_rig{
+		width: 600px;
+	}
+
+	.return-default-box .cart_list_con .usa_tit,
+	.return-default-box .cart_list_con .num_tit > span{
+	    padding-left: 25px;
+        font-family: "geogtq-md";
+	    font-size: 14px;
+	}
+	.return-default-box .cart_list_con .danjia_con span{
+		color: #000;
+	}
+
+
+	@media screen and (max-width:1223px) {
+		.return-default-box .tit_rig{
+			width: 350px;
+		}
+	}
+	@media screen and (max-width: 880px){
+		.return-default-box .tit_rig{
+			width: 289px;
+		}
+	}
+
+
+
+
+	.img-item {
+		border: 1px solid #797979;
+		width: 70px;
+		height: 70px;
+		margin: 20px 20px 0 0;
+		display: inline-block;
+	}
+
+	.img-item img{
+		width: 100%;
+	}
+
+	.img-item .icon-return{
+		position: absolute;
+		/*display: block;*/
+		background: url(../images/icon-r-close.png) no-repeat;
+		width: 20px;
+		height: 20px;
+	    margin-left: 48px;
+	}
+
+
+
+
+	/*-----------------zzq--------------*/
+		.return-default-box-bottom {
+			padding-top: 20px;
+		}
+
+		.returned-goods {
+			text-align: right;
+			font-size: 14px;
+			margin-bottom: 0;
+		}
+
+		.refund-totals {
+			text-align: right;
+			font-size: 14px;
+		}
+
+		.returned-goods span {
+			font-weight: bold;
+		}
+
+		.refund-totals span {
+			font-weight: bold;
+			font-size: 20px;
+		}
+
+		.upload-document {
+			font-size: 14px;
+			color: #999;
+		}
+
+		.upload-document span {
+			font-size: 12px;
+		}
+
+		.document-numb {
+			display: inline-block;
+			margin-right: 50px;
+			font-size: 14px;
+		}
+
+		.return-document {
+			color: #ff0000;
+			padding-top: 10px;
+		}
+
+		.return-reasons {
+			font-size: 14px;
+			color: #999;
+		}
+
+		.return-default-box-bottom .form-select,
+		.drop-down {
+			/* width: 68%; */
+		}
+
+		.choice-reason-return {
+			color: #ff0000;
+			margin-top: 5px;
+		}
+
+		.form-input .shurukuang {
+			border: 1px solid #ff0000;
+			width: 68%;
+			padding-left: 5px;
+		}
+
+		.choice-botton {
+			margin-top: 20px;
+		}
+
+		.choice-botton button {
+			width: 33%;
+			margin-right: 10px;
+			font-size: 14px;
+		}
+
+		.return-status {
+			font-size: 14px;
+		}
+
+		.return-status span {
+			color: #999;
+			display: inline-block;
+			width: 70px;
+			float: left;
+		}
+
+		.mar-b-10 {
+			margin-bottom: 10px;
+		}
+
+		.return-document-picture {
+			margin-left: 70px;
+		}
+
+		.img-box {
+			font-size: 0;
+			vertical-align: top;
+		}
+
+		.img-box a {
+			cursor: inherit;
+			width: 66px;
+			height: 66px;
+			margin-right: 12px;
+			margin-bottom: 10px;
+			display: inline-block;
+			vertical-align: top;
+			position: relative;
+			cursor: pointer;
+		}
+
+		.img-box a.bj img{
+			z-index: 2000;
+		}
+		.img-box a img {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			right: 0;
+			top: 0;
+			border: 1px solid #dbdbdb;
+		}
+
+		.img-box a div.img-close {
+			width: 50px;
+			height: 50px;
+			line-height: 45px;
+			position: absolute;
+			top: 0;
+			right: 0;
+			background-color: #dd1e29;
+			display: none;
+			z-index: 2100;
+			font-size: 45px;
+			text-align: center;
+			color: #fff;
+		}
+
+	/*报错*/
+		.return-default-box-bottom .has-error {
+			display: none;
+			color: #ff0000;
+			padding: 5px 0;
+			margin-top: 3px;
+			float: left;
+		}
+
+		.return-default-box-bottom > span.has-error{
+			position: absolute;
+			margin-top: 0;
+			padding: 0;
+		}
+
+		.return-in-box{
+			margin-top: 15px;
+		}
+
+	/*下拉框*/
+		.return-select{
+			width: 50%;
+		}
+
+		.drop-select-wrap .return-textarea{
+			width: 50%;
+		    padding: 10px 20px;
+		}
+
+		.return-btn .btn{
+			width: 190px;
+		}
+
+		.return-select .btn {
+			line-height: 28px;
+		}
+		.return-select .btn.dianji {
+			line-height: 26px;
+		}
+
+
+	/*剩余*/
+		.return-num{
+			position: absolute;
+			margin-top: -30px;
+			margin-left: 375px;
+		    color: #999999;
+		}
+
+	/*退款名称*/
+		.upload-box span{
+			margin-right: 55px;
+			height: 40px;
+			line-height: 40px;
+			vertical-align: middle;
+
+			font-weight: 400;
+			font-size: 14px;
+			color: #000000;
+		}
+
+
+	/*上传按钮*/
+		.upload-box .upload-img{
+			width: 126px;
+			height: 40px;
+			line-height: 40px;
+			font-size: 14px;
+		}
+
+	/*禁止点击*/
+		.return-unclick{
+			pointer-events: none;
+			background-color: #999999;
+		}
+
+	.return-item-box .box{
+		margin-top: 20px;
+	}
+	
+	/*hr*/
+	.return-hr{
+		width: 50%;
+		margin: 10px 0;
+		border: none;
+		border-bottom: 1px dashed #cccccc;
+	}
+	.return-rt-tit {
+		font-size: 13px;
+		float: right;
+	    margin: 0;
+	    line-height: 35px;
+	    font-weight: normal;
+	}
+	.return-rt-tit a{
+		text-decoration: underline;
+	}
+	
+
+/*	20160612 退货	end	*/

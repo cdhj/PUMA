@@ -1,0 +1,114 @@
+// Copyright 2006-2018 ClickTale Ltd., US Patent Pending
+
+
+window.ClickTaleGlobal = window.ClickTaleGlobal || {};
+window.ClickTaleSettings = window.ClickTaleSettings || {};
+
+ClickTaleGlobal.init = ClickTaleGlobal.init || {};
+ClickTaleGlobal.scripts = ClickTaleGlobal.scripts || {};
+
+
+ClickTaleGlobal.scripts.filter = ClickTaleGlobal.scripts.filter || (function () {
+	var recordingThreshold = Math.random() * 100;
+
+	return {
+		isRecordingApproved: function(percentage) {
+			return recordingThreshold <= percentage;
+		}
+	}
+})();
+	
+if (typeof(ct_dispatcher) == 'undefined') {
+	ct_dispatcher = {
+		configName : null,
+		cookieName : "ct_configName",
+		getParameterByName : function (name) {
+			name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			var regexS = "[\\?&]" + name + "=([^&#]*)";
+			var regex = new RegExp(regexS, "i");
+			var results = regex.exec(window.location.search);
+			if(results == null)
+				return "";
+			else
+				return decodeURIComponent(results[1].replace(/\+/g, " "));
+		},
+		createCookie: function (name,value,days) {
+			if (days) {
+				var date = new Date();
+				date.setTime(date.getTime()+(days*24*60*60*1000));
+				var expires = "; expires="+date.toGMTString();
+			}
+			else var expires = "";
+			document.cookie = name+"="+value+expires+"; path=/";
+		},
+		readCookie : function (name) {
+			var nameEQ = name + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0;i < ca.length;i++) {
+				var c = ca[i];
+				while (c.charAt(0)==' ') c = c.substring(1,c.length);
+				if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+			}
+			return null;
+		}
+	};
+	
+	var ct_pdc_qs_val = ct_dispatcher.getParameterByName(ct_dispatcher.cookieName);
+	if (ct_pdc_qs_val) {
+		ct_dispatcher.createCookie(ct_dispatcher.cookieName, ct_pdc_qs_val, 14);
+		ct_dispatcher.configName = ct_pdc_qs_val;
+	}
+	else {
+		ct_dispatcher.configName = ct_dispatcher.readCookie(ct_dispatcher.cookieName);
+	}	
+}
+
+if (typeof (ClickTaleCreateDOMElement) != "function")
+{
+	ClickTaleCreateDOMElement = function(tagName)
+	{
+		if (document.createElementNS)
+		{
+			return document.createElementNS('http://www.w3.org/1999/xhtml', tagName);
+		}
+		return document.createElement(tagName);
+	}
+}
+
+if (typeof (ClickTaleAppendInHead) != "function")
+{
+	ClickTaleAppendInHead = function(element)
+	{
+		var parent = document.getElementsByTagName('head').item(0) || document.documentElement;
+		parent.appendChild(element);
+	}
+}
+
+if (typeof (ClickTaleXHTMLCompliantScriptTagCreate) != "function")
+{
+	ClickTaleXHTMLCompliantScriptTagCreate = function(code)
+	{
+		var script = ClickTaleCreateDOMElement('script');
+		script.setAttribute("type", "text/javascript");
+		script.text = code;
+		return script;
+	}
+}	
+ClickTaleGlobal.init.configFoundPCC = false;
+if (ct_dispatcher.configName == 'DisableRecordings')
+{
+	ClickTaleGlobal.init.configFoundPCC = true;
+			(function(){
+		var script = ClickTaleXHTMLCompliantScriptTagCreate("\/\/ Copyright 2006-2018 ClickTale Ltd., US Patent Pending\r\n\/\/ PID: 493\r\n\r\n\r\n\r\n");
+				document.body.appendChild(script);
+			})();
+	}		
+
+if (!ClickTaleGlobal.init.configFoundPCC)
+{
+			(function(){
+		var script = ClickTaleXHTMLCompliantScriptTagCreate("\/\/ Copyright 2006-2018 ClickTale Ltd., US Patent Pending\r\n\/\/ PID: 493\r\n\r\n\r\n\r\n\/*browsers exclusion start*\/function doOnlyWhen(toDoHandler, toCheckHandler, interval, times, failHandler) {\r\n    if ((!toDoHandler) || (!toCheckHandler)) return;\r\n    if (typeof interval == \"undefined\") interval = 1000;\r\n    if (typeof times == \"undefined\") times = 20;\r\n\r\n    if (--times \u003c 0 \u0026\u0026 typeof failHandler === \u0027function\u0027) {\r\n        failHandler();\r\n        return;\r\n    }\r\n    if (toCheckHandler()) {\r\n        toDoHandler();\r\n        return;\r\n    }\r\n\r\n    setTimeout(function () { doOnlyWhen(toDoHandler, toCheckHandler, interval, times); }, interval);\r\n}\r\ndoOnlyWhen(function () { if (window.ClickTaleSettings.PTC.okToRunPCC) { (function(){\r\nwindow.ClickTaleSettings = window.ClickTaleSettings || {};\r\nwindow.ClickTaleSettings.PTC = window.ClickTaleSettings.PTC || {};\r\nwindow.ClickTaleSettings.PTC.originalPCCLocation = \"P06_PID493\";\r\n\r\nvar e=!0,f=null,i=!1;function j(){return function(){}};var k;function l(a,b,c,d,h){a\u0026\u0026b\u0026\u0026(\"undefined\"==typeof c\u0026\u0026(c=1E3),\"undefined\"==typeof d\u0026\u0026(d=20),0\u003e--d?\"function\"===typeof h\u0026\u0026h():b()?a():setTimeout(function(){l(a,b,c,d,h)},c))}function aa(a){var b=\"someText\".trim,c=\/^[\\s\\uFEFF\\xA0]+|[\\s\\uFEFF\\xA0]+$\/g;k=b\u0026\u0026!b.call(new String(\"\\ufeff\\u00a0\"))?function(a){return a==f?\"\":b.call(a)}:function(a){return a==f?\"\":(a+\"\").replace(c,\"\")};return k(a)};function m(a,b){if(a\u0026\u0026a.nodeType\u0026\u00269===a.nodeType)return i;var c=Element.prototype;m=function(a,b){return!a||!document.documentElement.contains(a)?i:m.e.call(a,b)};m.e=c.matches||c.webkitMatchesSelector||c.mozMatchesSelector||c.msMatchesSelector;return m(a,b)}function n(a,b){n=Element.prototype.closest?function(a,b){return!(a\u0026\u0026a instanceof Element)?f:Element.prototype.closest.call(a,b)}:function(a,b){for(;a\u0026\u0026!m(a,b);)a=a.parentElement;return a};return n(a,b)};var o=i,ba=Object.defineProperty\u0026\u0026Object.defineProperty({},\"passive\",{get:function(){o=e}});document.addEventListener(\"test\",j(),ba);var p=o?{passive:e,capture:e}:e,ca=0;function q(a){function b(){2==++q.f\u0026\u0026a()}r(b);if(\"function\"==typeof ClickTaleIsRecording\u0026\u0026ClickTaleIsRecording()===e)b();else{var c=window.ClickTaleOnRecording||j();window.ClickTaleOnRecording=function(){b();return c.apply(this,arguments)}}}q.f=0;\r\nfunction r(a){function b(){c||(c=e,a())}var c=i;\"loading\"!=document.readyState?b():document.addEventListener\u0026\u0026document.addEventListener(\"DOMContentLoaded\",b,i)}\r\nfunction s(a,b,c,d,h){\"string\"===typeof a?(a=document.querySelectorAll(a),Array.prototype.forEach.call(a,function(a){s(a,b,c,d,h)})):a instanceof Array||a instanceof NodeList?Array.prototype.forEach.call(a,function(a){s(a,b,c,d,h)}):a.addEventListener(b,function(a,b,c,d,h){return function(ga){if(\"function\"===typeof c)c.apply(this,arguments),h\u0026\u0026a.removeEventListener(b,arguments.callee,p);else{var I=n(ga.target,c);I\u0026\u0026a.compareDocumentPosition(I)\u0026Node.DOCUMENT_POSITION_CONTAINED_BY\u0026\u0026(d.apply(I,arguments),\r\nh\u0026\u0026a.removeEventListener(b,arguments.callee,p))}}}(a,b,c,d,h),p)}function da(a,b){document.addEventListener(\"mouseup\",function(c){a===c.target\u0026\u0026b();document.removeEventListener(\"mouseup\",arguments.callee,p)},e)}\r\nfunction ea(a,b){function c(c){document.removeEventListener(\"touchend\",arguments.callee,p);a===c.target\u0026\u0026b()}document.addEventListener(\"touchend\",c,p);document.addEventListener(\"touchmove\",function(a){document.removeEventListener(\"touchmove\",arguments.callee,p);document.removeEventListener(\"touchend\",c,p)},p)}function t(a,b){var c=u();c\u0026\u0026(t=c.m?ea:da,t(a,b))};function v(a){if(window.CSS\u0026\u0026\"function\"===typeof window.CSS.escape)v=function(a){return window.CSS.escape.call(window.CSS,a)};else{var b=\/([\\0-\\x1f\\x7f]|^-?\\d)|^-$|[^\\x80-\\uFFFF\\w-]\/g,c=function(a,b){return b?\"\\x00\"===a?\"\\ufffd\":a.slice(0,-1)+\"\\\\\"+a.charCodeAt(a.length-1).toString(16)+\" \":\"\\\\\"+a};v=function(a){return(a+\"\").replace(b,c)}}return v(a)};function w(){return!(!window.ClickTaleMonitor||!(\"function\"===typeof window.ClickTaleMonitor.isMonitoring\u0026\u0026window.ClickTaleMonitor.isMonitoring()))}function x(){if(window.ClickTaleMonitor\u0026\u0026ClickTaleMonitor.Settings\u0026\u0026\"function\"===typeof ClickTaleMonitor.Settings.get){var a=ClickTaleMonitor.Settings.get();a.monitor\u0026\u0026a.monitor.onStop\u0026\u0026\"function\"==typeof a.monitor.onStop\u0026\u0026(a.monitor.onStop(function(){a.started=i}),ClickTaleMonitor.App.prototype.dispose.call(a.monitor,i,i,e))}}\r\nfunction z(a,b,c){if(window.ClickTaleMonitor\u0026\u0026\"function\"==typeof ClickTaleMonitor.restart\u0026\u0026A()\u0026\u0026(c=c||500,B)){B=i;var d=ClickTaleMonitor.Settings.get(),h=d.shouldStartMonitorCallback||j(),g=\"\";d\u0026\u0026d.config\u0026\u0026d.config.transport\u0026\u0026(g=d.config.transport.url||\"\");x();d=ClickTaleMonitor.Settings.get();g\u0026\u0026d.configure({transport:{url:g}});\"function\"===typeof d.shouldStartMonitor\u0026\u0026d.shouldStartMonitor(h);ClickTaleMonitor.restart(a,b);setTimeout(function(){B=e},c)}}var B=e,C,D,E,F=i,G=i,J=i;\r\nfunction A(){var a=i;if(w())a=e;else if(window.ClickTaleMonitor){var b=window.ClickTaleMonitor\u0026\u0026ClickTaleMonitor.Settings\u0026\u0026\"function\"==typeof ClickTaleMonitor.Settings.get?ClickTaleMonitor.Settings.get():f;if(b)b.onStart(function(){A.state=e})}else return l(A,function(){return!!window.ClickTaleMonitor},1E3,10),i;A=function(){return A.state};A.state=a;return A.state}A.state=i;A();function K(){\"function\"===typeof ClickTaleStop\u0026\u0026ClickTaleStop()}function L(a,b){\"function\"===typeof ClickTaleEvent\u0026\u0026(b?L.b[a]!==e\u0026\u0026(L.b[a]=e,ClickTaleEvent(a)):ClickTaleEvent(a))}L.b={};window.ClickTaleDetectAgent\u0026\u0026window.ClickTaleDetectAgent()\u0026\u0026window.ClickTaleDetectAgent();\r\nfunction M(a,b){\"object\"==typeof a\u0026\u0026\"string\"==typeof b\u0026\u0026(window.ClickTaleContext\u0026\u0026-1!=document.referrer.indexOf(location.hostname)\u0026\u0026window.parent.ct\u0026\u0026window.parent.ct.ElementAddressing\u0026\u0026\"function\"===typeof window.parent.ct.ElementAddressing.setCustomElementID?window.parent.ct.ElementAddressing.setCustomElementID(a,b):(!window.ClickTaleContext\u0026\u0026\"function\"===typeof ClickTaleSetCustomElementID\u0026\u0026-1!=ClickTaleSetCustomElementID.toString().indexOf(\"duplicate registration of custom id\")?M=function(a,b){a.ClickTale=\r\na.ClickTale||{};a.ClickTale.CustomID=b}:window.ClickTaleSetCustomElementID=window.ClickTaleSetCustomElementID||function(a,b){a.ClickTale=a.ClickTale||{};a.ClickTale.CustomID=b},window.ClickTaleSetCustomElementID(a,b)))}\r\nfunction fa(){Array.prototype.forEach.call(document.querySelectorAll(\u0027[id]:not([id=\"\"])\u0027),function(a){if(!m(a,\u0027input[type=\"hidden\"]\u0027)){var b=a.getAttribute(\"id\");b.match(\/(?:\\r|\\n)\/)\u0026\u0026\"function\"===typeof ClickTaleNote\u0026\u0026ClickTaleNote(\"ctlib.api.SetCustomElementIdDuplicates: ids with line break found!\");var a=document.querySelectorAll(\u0027[id=\"\u0027+v(b)+\u0027\"]\u0027),c=N;1\u003ca.length\u0026\u0026!c[b]\u0026\u0026(c[b]=e,Array.prototype.forEach.call(a,function(a,c){M(a,b.replace(\/(\\r|\\n|\\r\\n|\\s+)+\/g,\"_\").replace(\/\\W\/g,\"_\")+\"_\"+c)}))}})}\r\nvar N={};function O(){return\"function\"===typeof ClickTaleIsRecording?ClickTaleIsRecording():i}function P(a,b){\"function\"===typeof ClickTaleLogical\u0026\u0026(L.b={},N={},b?ClickTaleLogical(a,b):ClickTaleLogical(a))}function u(){if(\"function\"===typeof ClickTaleDetectAgent){var a=ClickTaleDetectAgent();if(a)return u=function(){return a},u()}return f}function Q(){\"function\"===typeof ClickTaleUploadPage\u0026\u0026ClickTaleUploadPage(void 0,void 0)}\r\nfunction ha(){var a;if(!a){a=\"mousedown\";if(\"boolean\"!=typeof R){var b=u();b\u0026\u0026(R=b.m)}R\u0026\u0026(a=\"touchstart\")}R?s(document,\"touchstart\",\"label[for]\",function(a){var b=a.target,h=this;t(b,function(a){return function(){var b,c;if((b=a.getAttribute(\"for\"))\u0026\u0026(c=document.getElementById(b)))b=c,\"function\"===typeof ClickTaleRegisterTouchAction\u0026\u0026(c=b.getBoundingClientRect(),ClickTaleRegisterTouchAction(b,c.left+document.body.scrollLeft,c.top+document.body.scrollTop))}.bind(h)}(b,a))}):s(document,a,\"img, a, button, textarea, input, select\",\r\nfunction(a){var b=a.target,h=this;t(b,function(a,b){return function(){function c(){}document.addEventListener(\"click\",function(a){return c=function(b){b.target===a\u0026\u0026(S=e);document.removeEventListener(\"click\",arguments.callee,i)}}(a),i);setTimeout(function(){!S\u0026\u0026\"function\"===typeof window.ClickTaleRegisterElementAction\u0026\u0026ClickTaleRegisterElementAction(\"click\",b);document.removeEventListener(\"click\",c,i);S=void 0},200)}.bind(h)}(b,a))})}var R,S;\r\nfunction T(a,b,c,d){T.d\u0026\u0026(T.d=i,d=d||400,\"number\"==typeof c\u0026\u0026(d=c,c=\"\"),b=b||document.location.href,K(),window.ClickTaleIncludedOnDOMReady=e,window.ClickTaleIncludedOnWindowLoad=e,Q(),P(b,c),a(),setTimeout(function(){T.d=e},d))}T.d=e;function ia(){var a,b=U,c=document.location,d=V,h=W;X\u0026\u0026(X=i,a=a||400,h\u0026\u0026(K(),window.ClickTaleIncludedOnDOMReady=e,window.ClickTaleIncludedOnWindowLoad=e,Q(),P(c.href,d)),z(c,d),b(),setTimeout(function(){X=e},a))}var X=e;var ja=L,ka=t;var Y;\r\nfunction la(a){var b,c=\"Maxymiser,Optimizely,Monetate,Adobe,Google,AB Tasty,HP,Kaizen\".split(\",\");Y=function(a){if(window.ClickTaleMonitor\u0026\u0026\"function\"===typeof ClickTaleMonitor.ctData)if(Y=function(a){a\u0026\u0026ClickTaleMonitor.ctData({event:\"abtest\",vendor:\"Unknown\",experience:a})},w())Y(a);else ClickTaleMonitor.Settings.get().onStart(function(){Y(a)})};b=function(a){for(var h=0;h\u003ca.length;h++){var g=a[h];if(g)if(\"string\"===typeof g){if(g=aa(g))L(g),window.ClickTaleMonitor\u0026\u0026-1===c.indexOf(g)\u0026\u0026(-1\u003cg.indexOf(\"Campaign:\")\u0026\u0026\r\n-1\u003cg.indexOf(\"Experience:\")\u0026\u0026(g=g.replace(\"Campaign:\",\"Cmp:\"),g=g.replace(\"Experience:\",\"Exp:\")),100\u003cg.length\u0026\u0026(g=g.substr(g.length-100)),Y(g))}else Array.isArray(g)\u0026\u0026b(g)}};arguments.length\u0026\u0026b(arguments)}la.version=\"2\";var W=i,Z=i,ma=e,V=location.href;function na(){if(\"boolean\"===typeof Z){var a=Z.toString();\"function\"===typeof ClickTaleField\u0026\u0026ClickTaleField(\"isMobile\",a)}}function U(){fa();V=location.href;if(ma)ma=i;else for(var a=window.ClickTaleSettings\u0026\u0026window.ClickTaleSettings.PTC\u0026\u0026window.ClickTaleSettings.PTC.InitFuncs?window.ClickTaleSettings.PTC.InitFuncs:[],b=0,c=a.length;b\u003cc;b++)if(\"function\"===typeof a[b])a[b]();W?na():q(function(){W=e;na()})}\r\nfunction oa(){if(!window.ClickTaleFirstPCCGo){window.ClickTaleFirstPCCGo=e;var a=u();a\u0026\u0026(Z=a.m);U();s(document,Z?\"touchstart\":\"mousedown\",\"selectorHere\",function(a){var c=a.target;ka(c,function(a,b,c){return j().bind(c)}(c,a,this))})}}(function(a){function b(){2==++ca\u0026\u0026a()}r(b);if(\"function\"==typeof ClickTale)b();else{var c=window.ClickTaleOnRecording||j();window.ClickTaleOnRecording=function(){b();return c.apply(this,arguments)}}})(function(){ha();oa()});\r\nwindow.clickTaleStartEventSignal=function(a){ia();a\u0026\u0026\"string\"===typeof a\u0026\u0026ja(a)};window.clickTaleEndEventSignal=function(){C\u0026\u0026(history.replaceState=C);D\u0026\u0026(history.pushState=D);E\u0026\u0026window.removeEventListener(\"popstate\",E,i);K()};\r\n(function(a,b,c,d,h){function g(){G\u0026\u0026T(a,location.href,H,c);if(w()||J)z(document.location,H,c),J=i;H=location.href;F=i}function y(a){!isNaN(h)\u0026\u0026\"number\"==typeof h\u0026\u0026!a?(a=h||0,setTimeout(y.bind(f,e),a)):(O()\u0026\u0026(G=e,K()),w()\u0026\u0026(x(),J=e),d()?F=e:b?\"string\"===typeof b?l(g,function(){return!!document.querySelector(b+\"\")},1E3,10,g):\"function\"===typeof b?l(g,b,1E3,10,g):setTimeout(g,2E3):setTimeout(g,2E3))}var d=d||function(){return i},a=a||j(),H=location.href;!c\u0026\u0026!isNaN(b)\u0026\u0026(c=b,b=\"\");c=c||2E3;window.history\u0026\u0026\r\n(C=history.replaceState,history.replaceState=function(){O()||w()||F?setTimeout(y,5):history.replaceState=C;return C.apply(history,arguments)},D=history.pushState,history.pushState=function(){O()||w()||F?setTimeout(y,5):history.pushState=D;return D.apply(history,arguments)},E=function(){O()||w()||F?setTimeout(y,5):window.removeEventListener(\"popstate\",arguments.callee,i)},window.addEventListener(\"popstate\",E,i))})(U);window.ClicktaleIntegrationExperienceHandler=la;})();} }, function () { return !!(window.ClickTaleSettings \u0026\u0026 window.ClickTaleSettings.PTC \u0026\u0026 typeof window.ClickTaleSettings.PTC.okToRunPCC != \u0027undefined\u0027); }, 500, 20);\r\n");
+		document.body.appendChild(script);	})();
+	}
+
+//Signature:dB/59grho0ZzODKFo6MFbq0BSVvNDexc/1b8aORe8hCYT3UKHsu6nDhtdXEMoY/EL1/5Qkot5mBJL720qW8sdPVa/fwDMrO0vkI5vYpWR4QgMJwmIa7OD+8RF1O+ohGIXrrAl20gBT8sTs5TR3lGyeQ6OGlOocy8IR51je2NX5o=
